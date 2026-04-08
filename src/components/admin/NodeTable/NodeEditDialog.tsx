@@ -8,14 +8,18 @@ import { DataTableRefreshContext } from "@/components/admin/NodeTable/schema/Dat
 import { Pencil } from "lucide-react";
 import { t } from "i18next";
 import { toast } from "sonner";
-import { Button, Dialog, Flex, IconButton, TextField } from "@radix-ui/themes";
+import { Button, Dialog, Flex, IconButton, TextField, Switch } from "@radix-ui/themes";
 
 export function EditDialog({ item }: { item: z.infer<typeof schema> }) {
   const [form, setForm] = React.useState<ClientFormData & { weight: number }>({
     name: item.name || "",
-    token: item.token || "", // 从 item 初始化 token
-    remark: item.remark || "", // 从 item 初始化 remark
-    public_remark: item.public_remark || "", // 从 item 初始化 public_remark
+    token: item.token || "",
+    remark: item.remark || "",
+    public_remark: item.public_remark || "",
+    ddns_enabled: item.ddns_enabled || false,
+    ddns_hostname: item.ddns_hostname || "",
+    ddns_record_id: item.ddns_record_id || "",
+    ddns_record_type: item.ddns_record_type || "inherit",
     weight: item.weight || 0,
   });
   const [loading, setLoading] = React.useState(false);
@@ -32,22 +36,25 @@ export function EditDialog({ item }: { item: z.infer<typeof schema> }) {
     setLoadingCallback(true);
     fetch(`/api/admin/client/${uuid}/edit`, {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
     })
       .then(async (res) => {
-        if (onSuccess) onSuccess();
         if (res.status === 200) {
-          if (refreshTable) refreshTable();
+          onSuccess?.();
+          refreshTable?.();
           toast.success(t("admin.nodeEdit.saveSuccess", "保存成功"));
-        } else {
-          toast.error(t("admin.nodeEdit.saveError", "保存失败"));
+          return;
         }
+        const data = await res.json().catch(() => null);
+        toast.error(data?.message || t("admin.nodeEdit.saveError", "保存失败"));
       })
       .catch(() => {
         toast.error(t("admin.nodeEdit.saveError", "保存失败"));
       })
       .finally(() => setLoadingCallback(false));
   }
+
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger>
@@ -75,9 +82,7 @@ export function EditDialog({ item }: { item: z.infer<typeof schema> }) {
             </label>
             <TextField.Root
               value={form.token}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, token: e.target.value }))
-              }
+              onChange={(e) => setForm((f) => ({ ...f, token: e.target.value }))}
               placeholder={t("admin.nodeEdit.tokenPlaceholder", "请输入 Token")}
               disabled={loading}
               readOnly
@@ -90,13 +95,8 @@ export function EditDialog({ item }: { item: z.infer<typeof schema> }) {
             </label>
             <TextField.Root
               value={form.remark}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, remark: e.target.value }))
-              }
-              placeholder={t(
-                "admin.nodeEdit.remarkPlaceholder",
-                "请输入私有备注"
-              )}
+              onChange={(e) => setForm((f) => ({ ...f, remark: e.target.value }))}
+              placeholder={t("admin.nodeEdit.remarkPlaceholder", "请输入私有备注")}
               disabled={loading}
             />
           </div>
@@ -106,15 +106,62 @@ export function EditDialog({ item }: { item: z.infer<typeof schema> }) {
             </label>
             <TextField.Root
               value={form.public_remark}
-              onChange={(e) =>
-                setForm((f) => ({ ...f, public_remark: e.target.value }))
-              }
-              placeholder={t(
-                "admin.nodeEdit.publicRemarkPlaceholder",
-                "请输入公开备注"
-              )}
+              onChange={(e) => setForm((f) => ({ ...f, public_remark: e.target.value }))}
+              placeholder={t("admin.nodeEdit.publicRemarkPlaceholder", "请输入公开备注")}
               disabled={loading}
             />
+          </div>
+          <div className="border rounded-lg p-3 space-y-3">
+            <label className="block text-sm font-medium text-muted-foreground">
+              {t("admin.nodeEdit.ddnsTitle", "DDNS")}
+            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-muted-foreground">
+                {t("admin.nodeEdit.ddnsEnabled", "启用节点级 DDNS")}
+              </label>
+              <Switch
+                checked={!!form.ddns_enabled}
+                onCheckedChange={(checked) => setForm((f) => ({ ...f, ddns_enabled: checked }))}
+                disabled={loading}
+              />
+            </div>
+            <div>
+              <label className="block mb-1 text-sm font-medium text-muted-foreground">
+                {t("admin.nodeEdit.ddnsHostname", "Hostname")}
+              </label>
+              <TextField.Root
+                value={form.ddns_hostname || ""}
+                onChange={(e) => setForm((f) => ({ ...f, ddns_hostname: e.target.value }))}
+                placeholder={t("admin.nodeEdit.ddnsHostnamePlaceholder", "example.com")}
+                disabled={loading}
+              />
+            </div>
+            <div>
+              <label className="block mb-1 text-sm font-medium text-muted-foreground">
+                {t("admin.nodeEdit.ddnsRecordId", "Record ID")}
+              </label>
+              <TextField.Root
+                value={form.ddns_record_id || ""}
+                onChange={(e) => setForm((f) => ({ ...f, ddns_record_id: e.target.value }))}
+                placeholder={t("admin.nodeEdit.ddnsRecordIdPlaceholder", "Cloudflare Record ID")}
+                disabled={loading}
+              />
+            </div>
+            <div>
+              <label className="block mb-1 text-sm font-medium text-muted-foreground">
+                {t("admin.nodeEdit.ddnsRecordType", "Record Type")}
+              </label>
+              <select
+                className="w-full border rounded px-3 py-2 bg-background"
+                value={form.ddns_record_type || "inherit"}
+                onChange={(e) => setForm((f) => ({ ...f, ddns_record_type: e.target.value }))}
+                disabled={loading}
+              >
+                <option value="inherit">{t("admin.nodeEdit.ddnsRecordTypeInherit", "继承全局")}</option>
+                <option value="A">A</option>
+                <option value="AAAA">AAAA</option>
+              </select>
+            </div>
           </div>
         </div>
         <Flex gap="2" align={"start"} className="mt-4">
@@ -127,16 +174,16 @@ export function EditDialog({ item }: { item: z.infer<typeof schema> }) {
                 token: form.token,
                 remark: form.remark,
                 public_remark: form.public_remark,
+                ddns_enabled: form.ddns_enabled,
+                ddns_hostname: form.ddns_hostname,
+                ddns_record_id: form.ddns_record_id,
+                ddns_record_type: form.ddns_record_type,
               };
-              saveClientData(item.uuid, payload, setLoading, () =>
-                setOpen(false)
-              );
+              saveClientData(item.uuid, payload, setLoading, () => setOpen(false));
             }}
             disabled={loading}
           >
-            {loading
-              ? t("admin.nodeEdit.waiting", "等待...")
-              : t("admin.nodeEdit.save", "保存")}
+            {loading ? t("admin.nodeEdit.waiting", "等待...") : t("admin.nodeEdit.save", "保存")}
           </Button>
         </Flex>
       </Dialog.Content>

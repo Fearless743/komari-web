@@ -80,6 +80,12 @@ export const routes: RouteObject[] = [
             ),
           },
           {
+            path: "ddns",
+            element: React.createElement(
+              lazy(() => import("./pages/admin/settings/ddns"))
+            ),
+          },
+          {
             path: "general",
             element: React.createElement(
               lazy(() => import("./pages/admin/settings/general"))

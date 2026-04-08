@@ -5,6 +5,10 @@ export interface ClientFormData {
   token: string;
   remark: string;
   public_remark: string;
+  ddns_enabled?: boolean;
+  ddns_hostname?: string;
+  ddns_record_id?: string;
+  ddns_record_type?: string;
 }
 
 export const schema = z.object({
@@ -30,4 +34,8 @@ export const schema = z.object({
   token: z.string().optional(),
   remark: z.string().optional(),
   public_remark: z.string().optional(),
+  ddns_enabled: z.boolean().optional(),
+  ddns_hostname: z.string().optional(),
+  ddns_record_id: z.string().optional(),
+  ddns_record_type: z.string().optional(),
 });

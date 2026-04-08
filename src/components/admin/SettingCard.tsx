@@ -477,29 +477,29 @@ export function SettingCardLongTextInput({
   );
 }
 
-export function SettingCardSelect({
-  title,
-  description,
-  defaultValue = "",
-  value,
-  label = useTranslation().t("select"),
-  options = [],
-  OnSave = () => { },
-  autoDisabled = true,
-  isSaving,
-  bordless = false,
-}: {
-  title?: string;
-  description?: string;
-  defaultValue?: string;
-  value?: string;
-  label?: string;
-  options?: { value: string; label?: string; disabled?: boolean }[];
-  OnSave?: (value: string, buttonElement: HTMLButtonElement) => void;
-  autoDisabled?: boolean;
-  isSaving?: boolean;
-  bordless?: boolean;
-}) {
+	export function SettingCardSelect({
+	  title,
+	  description,
+	  defaultValue = "",
+	  value,
+	  label = useTranslation().t("select"),
+	  options = [],
+	  OnSave = () => { },
+	  autoDisabled = true,
+	  isSaving,
+	  bordless = false,
+	}: {
+	  title?: string;
+	  description?: string;
+	  defaultValue?: string;
+	  value?: string;
+	  label?: string | React.ReactNode;
+	  options?: { value: string; label?: string | React.ReactNode; disabled?: boolean }[];
+	  OnSave?: (value: string, buttonElement: HTMLButtonElement) => void;
+	  autoDisabled?: boolean;
+	  isSaving?: boolean;
+	  bordless?: boolean;
+	}) {
   const [disabled, setDisabled] = React.useState(false);
   const savingState = isSaving !== undefined ? isSaving : disabled;
   const [selectedValue, setSelectedValue] = React.useState(

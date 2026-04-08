@@ -1165,12 +1165,20 @@ function EditButton({ node }: { node: NodeDetail }) {
   const [saving, setSaving] = useState(false);
   const [traffic_limit, setTrafficLimit] = useState(0);
   const [traffic_limit_type, setTrafficLimitType] = useState("sum");
+  const [ddns_enabled, setDdnsEnabled] = useState(false);
+  const [ddns_hostname, setDdnsHostname] = useState("");
+  const [ddns_record_id, setDdnsRecordId] = useState("");
+  const [ddns_record_type, setDdnsRecordType] = useState("inherit");
 
   React.useEffect(() => {
     setHidden(node.hidden);
     setTrafficLimit(node.traffic_limit || 0);
     setTrafficLimitType(node.traffic_limit_type || "sum");
-  }, [node.hidden, node.traffic_limit, node.traffic_limit_type]);
+    setDdnsEnabled(node.ddns_enabled || false);
+    setDdnsHostname(node.ddns_hostname || "");
+    setDdnsRecordId(node.ddns_record_id || "");
+    setDdnsRecordType(node.ddns_record_type || "inherit");
+  }, [node.hidden, node.traffic_limit, node.traffic_limit_type, node.ddns_enabled, node.ddns_hostname, node.ddns_record_id, node.ddns_record_type]);
 
   const save = async () => {
     try {
@@ -1186,6 +1194,10 @@ function EditButton({ node }: { node: NodeDetail }) {
           hidden,
           traffic_limit,
           traffic_limit_type,
+          ddns_enabled,
+          ddns_hostname,
+          ddns_record_id,
+          ddns_record_type,
         }),
         headers: {
           "Content-Type": "application/json",
@@ -1333,6 +1345,48 @@ function EditButton({ node }: { node: NodeDetail }) {
                 e.currentTarget.value = formatBytes(traffic_limit);
               }}
             ></SettingCardShortTextInput>
+          </SettingCardCollapse>
+          <SettingCardCollapse title={t("admin.nodeDetail.ddnsTitle", "DDNS")}>
+            <SettingCardSwitch
+              bordless
+              title={t("admin.nodeDetail.ddnsEnabled", "启用节点级 DDNS")}
+              description=""
+              defaultChecked={ddns_enabled}
+              onChange={setDdnsEnabled}
+            />
+            {ddns_enabled && (
+              <>
+                <SettingCardShortTextInput
+                  bordless
+                  title={t("admin.nodeDetail.ddnsHostname", "DDNS 主机名")}
+                  description={t("admin.nodeDetail.ddnsHostnamePlaceholder", "例如 node.example.com")}
+                  defaultValue={ddns_hostname}
+                  showSaveButton={false}
+                  onChange={(e) => setDdnsHostname(e.currentTarget.value)}
+                  onBlur={() => {}}
+                />
+                <SettingCardShortTextInput
+                  bordless
+                  title={t("admin.nodeDetail.ddnsRecordId", "DDNS Record ID（可选）")}
+                  description={t("admin.nodeDetail.ddnsRecordIdPlaceholder", "留空时按 hostname 自动查找")}
+                  defaultValue={ddns_record_id}
+                  showSaveButton={false}
+                  onChange={(e) => setDdnsRecordId(e.currentTarget.value)}
+                  onBlur={() => {}}
+                />
+                <SettingCardSelect
+                  bordless
+                  title={t("admin.nodeDetail.ddnsRecordType", "DDNS 记录类型")}
+                  defaultValue={ddns_record_type || "inherit"}
+                  options={[
+                    { label: t("admin.nodeDetail.ddnsRecordTypeInherit", "继承全局"), value: "inherit" },
+                    { label: "A", value: "A" },
+                    { label: "AAAA", value: "AAAA" },
+                  ]}
+                  OnSave={(val) => setDdnsRecordType(val)}
+                />
+              </>
+            )}
           </SettingCardCollapse>
         </div>
         <Flex gap="2" justify={"end"} className="mt-4">

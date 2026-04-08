@@ -34,7 +34,7 @@ function localKomariThemePlugin(): Plugin {
               JSON.stringify({
                 error: "Local theme file not found",
                 file: localThemeFile,
-              })
+              }),
             );
             return;
           }
@@ -53,7 +53,9 @@ export default defineConfig(({ mode }) => {
   const buildTime = new Date().toISOString();
 
   // Supports configuring BASE_URL via environment variables, defaulting to the root path.
-  const base: string = process.env.VITE_BASE_URL ? process.env.VITE_BASE_URL : '/';
+  const base: string = process.env.VITE_BASE_URL
+    ? process.env.VITE_BASE_URL
+    : "/";
   const baseConfig: UserConfig = {
     base: base,
     plugins: [
@@ -128,7 +130,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       assetsDir: "assets",
-      outDir: "dist",
+      outDir: "../public/defaultTheme/dist",
       chunkSizeWarningLimit: 800,
       rollupOptions: {
         output: {
@@ -136,7 +138,7 @@ export default defineConfig(({ mode }) => {
           chunkFileNames: "assets/chunk-[name]-[hash].js",
           entryFileNames: "assets/entry-[name]-[hash].js",
           // Do not use manualChunks, use React.lazy() and <Suspense> instead
-        }
+        },
       },
     },
   };
