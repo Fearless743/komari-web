@@ -1,6 +1,6 @@
 package empty
 
-import "github.com/komari-monitor/komari/utils/ddns/factory"
+import "github.com/Fearless743/komari/utils/ddns/factory"
 
 type Provider struct{}
 

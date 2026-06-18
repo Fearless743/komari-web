@@ -6,10 +6,10 @@ import (
 	"math"
 	"time"
 
-	"github.com/komari-monitor/komari/common"
-	"github.com/komari-monitor/komari/database/dbcore"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/utils/ddns"
+	"github.com/Fearless743/komari/common"
+	"github.com/Fearless743/komari/database/dbcore"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/utils/ddns"
 
 	"gorm.io/gorm"
 )

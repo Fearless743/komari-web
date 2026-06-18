@@ -2,8 +2,8 @@ package public
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/utils"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/utils"
 )
 
 func GetVersion(c *gin.Context) {

@@ -12,38 +12,38 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/api/admin"
-	"github.com/komari-monitor/komari/api/admin/clipboard"
-	log_api "github.com/komari-monitor/komari/api/admin/log"
-	"github.com/komari-monitor/komari/api/admin/notification"
-	"github.com/komari-monitor/komari/api/admin/test"
-	"github.com/komari-monitor/komari/api/admin/update"
-	"github.com/komari-monitor/komari/api/client"
-	"github.com/komari-monitor/komari/api/jsonRpc"
-	public_api "github.com/komari-monitor/komari/api/public"
-	"github.com/komari-monitor/komari/api/terminal"
-	"github.com/komari-monitor/komari/cmd/flags"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/api/admin"
+	"github.com/Fearless743/komari/api/admin/clipboard"
+	log_api "github.com/Fearless743/komari/api/admin/log"
+	"github.com/Fearless743/komari/api/admin/notification"
+	"github.com/Fearless743/komari/api/admin/test"
+	"github.com/Fearless743/komari/api/admin/update"
+	"github.com/Fearless743/komari/api/client"
+	"github.com/Fearless743/komari/api/jsonRpc"
+	public_api "github.com/Fearless743/komari/api/public"
+	"github.com/Fearless743/komari/api/terminal"
+	"github.com/Fearless743/komari/cmd/flags"
 
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database"
-	"github.com/komari-monitor/komari/database/accounts"
-	"github.com/komari-monitor/komari/database/auditlog"
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/database/dbcore"
-	"github.com/komari-monitor/komari/database/models"
-	d_notification "github.com/komari-monitor/komari/database/notification"
-	"github.com/komari-monitor/komari/database/records"
-	"github.com/komari-monitor/komari/database/tasks"
-	"github.com/komari-monitor/komari/public"
-	"github.com/komari-monitor/komari/utils"
-	"github.com/komari-monitor/komari/utils/cloudflared"
-	"github.com/komari-monitor/komari/utils/ddns"
-	"github.com/komari-monitor/komari/utils/geoip"
-	logutil "github.com/komari-monitor/komari/utils/log"
-	"github.com/komari-monitor/komari/utils/messageSender"
-	"github.com/komari-monitor/komari/utils/notifier"
-	"github.com/komari-monitor/komari/utils/oauth"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database"
+	"github.com/Fearless743/komari/database/accounts"
+	"github.com/Fearless743/komari/database/auditlog"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/database/dbcore"
+	"github.com/Fearless743/komari/database/models"
+	d_notification "github.com/Fearless743/komari/database/notification"
+	"github.com/Fearless743/komari/database/records"
+	"github.com/Fearless743/komari/database/tasks"
+	"github.com/Fearless743/komari/public"
+	"github.com/Fearless743/komari/utils"
+	"github.com/Fearless743/komari/utils/cloudflared"
+	"github.com/Fearless743/komari/utils/ddns"
+	"github.com/Fearless743/komari/utils/geoip"
+	logutil "github.com/Fearless743/komari/utils/log"
+	"github.com/Fearless743/komari/utils/messageSender"
+	"github.com/Fearless743/komari/utils/notifier"
+	"github.com/Fearless743/komari/utils/oauth"
 	"github.com/spf13/cobra"
 )
 
@@ -261,6 +261,8 @@ func RunServer() {
 			settingsGroup.POST("/ddns", admin.SetDdnsProvider)
 			settingsGroup.GET("/ddns", admin.GetDdnsProvider)
 			settingsGroup.POST("/ddns/cloudflare/zones", admin.GetCloudflareZones)
+			settingsGroup.GET("/ddns/history", admin.GetDdnsSyncHistory)
+			settingsGroup.DELETE("/ddns/history", admin.DeleteDdnsSyncHistory)
 		}
 		// themes
 		themeGroup := adminAuthrized.Group("/theme")
@@ -406,24 +408,30 @@ func InitDatabase() {
 func DoScheduledWork() {
 	tasks.ReloadPingSchedule()
 	d_notification.ReloadLoadNotificationSchedule()
-	ddnsTicker := time.NewTicker(10 * time.Minute)
 	ticker := time.NewTicker(time.Minute * 30)
 	minute := time.NewTicker(60 * time.Second)
 	//records.DeleteRecordBefore(time.Now().Add(-time.Hour * 24 * 30))
 	records.CompactRecord()
 	go notifier.CheckExpireScheduledWork()
+
+	var ddnsTicker = time.NewTicker(10 * time.Minute)
+	lastDdnsInterval := 10
 	for {
 		cfg, _ := config.GetManyAs[config.Legacy]()
 		interval := cfg.DdnsSyncInterval
 		if interval <= 0 {
 			interval = 10
 		}
+		if interval != lastDdnsInterval {
+			ddnsTicker.Stop()
+			ddnsTicker = time.NewTicker(time.Duration(interval) * time.Minute)
+			lastDdnsInterval = interval
+		}
 		select {
 		case <-ddnsTicker.C:
 			if allClients, err := clients.GetAllClientBasicInfo(); err == nil {
 				go ddns.SyncAll(allClients, "schedule", false)
 			}
-			ddnsTicker.Reset(time.Duration(interval) * time.Minute)
 		case <-ticker.C:
 			records.DeleteRecordBefore(time.Now().Add(-time.Hour * time.Duration(cfg.RecordPreserveTime)))
 			records.CompactRecord()

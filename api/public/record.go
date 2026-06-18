@@ -6,12 +6,12 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/database/accounts"
-	"github.com/komari-monitor/komari/database/dbcore"
-	"github.com/komari-monitor/komari/database/models"
-	records "github.com/komari-monitor/komari/database/records"
-	"github.com/komari-monitor/komari/database/tasks"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/database/accounts"
+	"github.com/Fearless743/komari/database/dbcore"
+	"github.com/Fearless743/komari/database/models"
+	records "github.com/Fearless743/komari/database/records"
+	"github.com/Fearless743/komari/database/tasks"
 )
 
 func GetRecordsByUUID(c *gin.Context) {

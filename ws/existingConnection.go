@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/komari-monitor/komari/common"
+	"github.com/Fearless743/komari/common"
 )
 
 var (

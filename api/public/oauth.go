@@ -5,11 +5,11 @@ import (
 	"slices"
 
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database/accounts"
-	"github.com/komari-monitor/komari/database/auditlog"
-	"github.com/komari-monitor/komari/utils"
-	"github.com/komari-monitor/komari/utils/oauth"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database/accounts"
+	"github.com/Fearless743/komari/database/auditlog"
+	"github.com/Fearless743/komari/utils"
+	"github.com/Fearless743/komari/utils/oauth"
 )
 
 // /api/oauth

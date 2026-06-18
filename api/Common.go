@@ -6,14 +6,14 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/common"
+	"github.com/Fearless743/komari/common"
 	"github.com/patrickmn/go-cache"
 
 	"strconv"
 
-	"github.com/komari-monitor/komari/database/dbcore"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/utils"
+	"github.com/Fearless743/komari/database/dbcore"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/utils"
 )
 
 var (

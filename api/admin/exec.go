@@ -6,12 +6,12 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/database/auditlog"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/database/tasks"
-	"github.com/komari-monitor/komari/utils"
-	"github.com/komari-monitor/komari/ws"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/database/auditlog"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/database/tasks"
+	"github.com/Fearless743/komari/utils"
+	"github.com/Fearless743/komari/ws"
 )
 
 // 接受数据类型：

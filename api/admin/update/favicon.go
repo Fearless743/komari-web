@@ -7,8 +7,8 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/database/auditlog"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/database/auditlog"
 )
 
 func UploadFavicon(c *gin.Context) {

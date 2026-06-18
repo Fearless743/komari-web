@@ -6,12 +6,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/database/dbcore"
-	"github.com/komari-monitor/komari/database/models"
-	messageevent "github.com/komari-monitor/komari/database/models/messageEvent"
-	"github.com/komari-monitor/komari/database/records"
-	"github.com/komari-monitor/komari/utils/messageSender"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/database/dbcore"
+	"github.com/Fearless743/komari/database/models"
+	messageevent "github.com/Fearless743/komari/database/models/messageEvent"
+	"github.com/Fearless743/komari/database/records"
+	"github.com/Fearless743/komari/utils/messageSender"
 )
 
 // LoadNotificationService 管理定时器和任务

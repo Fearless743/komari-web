@@ -1,8 +1,8 @@
 # Komari
 
-![Badge](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2Fkomari-monitor%2Fkomari&label=&icon=github&color=%23a370f7&message=&style=flat&tz=UTC)
+![Badge](https://hitscounter.dev/api/hit?url=https%3A%2F%2Fgithub.com%2FFearless743%2Fkomari&label=&icon=github&color=%23a370f7&message=&style=flat&tz=UTC)
 
-![komari](https://socialify.git.ci/komari-monitor/komari/image?description=1&font=Inter&forks=1&issues=1&language=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2Fkomari-monitor%2Fkomari-web%2Fd54ce1288df41ead08aa19f8700186e68028a889%2Fpublic%2Ffavicon.png&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Auto)
+![komari](https://socialify.git.ci/Fearless743/komari/image?description=1&font=Inter&forks=1&issues=1&language=1&logo=https%3A%2F%2Fraw.githubusercontent.com%2FFearless743%2Fkomari-web%2Fd54ce1288df41ead08aa19f8700186e68028a889%2Fpublic%2Ffavicon.png&name=1&owner=1&pattern=Plus&pulls=1&stargazers=1&theme=Auto)
 
 Komari 是一款轻量级的自托管服务器监控工具，旨在提供简单、高效的服务器性能监控解决方案。它支持通过 Web 界面查看服务器状态，并通过轻量级 Agent 收集数据。
 
@@ -31,7 +31,7 @@ Komari 是一款轻量级的自托管服务器监控工具，旨在提供简单�
 适用于使用了 systemd 的发行版（Ubuntu、Debian...）。
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/komari-monitor/komari/main/install-komari.sh -o install-komari.sh
+curl -fsSL https://raw.githubusercontent.com/Fearless743/komari/main/install-komari.sh -o install-komari.sh
 chmod +x install-komari.sh
 sudo ./install-komari.sh
 ```
@@ -48,7 +48,7 @@ sudo ./install-komari.sh
      -p 25774:25774 \
      -v $(pwd)/data:/app/data \
      --name komari \
-     ghcr.io/komari-monitor/komari:latest
+     ghcr.io/Fearless743/komari:latest
    ```
 3. 查看默认账号和密码：
    ```bash
@@ -61,7 +61,7 @@ sudo ./install-komari.sh
 
 ### 3. 二进制文件部署
 
-1. 访问 Komari 的 [GitHub Release 页面](https://github.com/komari-monitor/komari/releases) 下载适用于你操作系统的最新二进制文件。
+1. 访问 Komari 的 [GitHub Release 页面](https://github.com/Fearless743/komari/releases) 下载适用于你操作系统的最新二进制文件。
 2. 运行 Komari：
    ```bash
    ./komari server -l 0.0.0.0:25774
@@ -80,14 +80,14 @@ sudo ./install-komari.sh
 
 1. 构建前端静态文件：
    ```bash
-   git clone https://github.com/komari-monitor/komari-web
+   git clone https://github.com/Fearless743/komari-web
    cd komari-web
    npm install
    npm run build
    ```
 2. 构建后端：
    ```bash
-   git clone https://github.com/komari-monitor/komari
+   git clone https://github.com/Fearless743/komari
    cd komari
    ```
    将步骤1中生成的静态文件复制到 `komari` 项目根目录下的 `/public/defaultTheme/dist` 文件夹，并将 `komari-theme.json` 与 `preview.png`/`perview.png` 复制到 `/public/defaultTheme`。
@@ -126,7 +126,7 @@ sudo ./install-komari.sh
 
 ### 🚀 由 SharonNetworks 赞助
 
-[![Sharon Networks](https://raw.githubusercontent.com/komari-monitor/public/refs/heads/main/images/sharon-networks.webp)](https://sharon.io)
+[![Sharon Networks](https://raw.githubusercontent.com/Fearless743/public/refs/heads/main/images/sharon-networks.webp)](https://sharon.io)
 
 SharonNetworks 为您的业务起飞保驾护航！
 
@@ -140,4 +140,4 @@ SharonNetworks 为您的业务起飞保驾护航！
 
 ## Star History
 
-[![Star History Chart](https://api.star-history.com/svg?repos=komari-monitor/komari&type=Date)](https://www.star-history.com/#komari-monitor/komari&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=Fearless743/komari&type=Date)](https://www.star-history.com/#Fearless743/komari&Date)

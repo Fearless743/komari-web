@@ -1,7 +1,7 @@
 package generic
 
 import (
-	"github.com/komari-monitor/komari/utils/oauth/factory"
+	"github.com/Fearless743/komari/utils/oauth/factory"
 	"github.com/patrickmn/go-cache"
 )
 

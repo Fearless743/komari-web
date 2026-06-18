@@ -6,13 +6,13 @@ import (
 	"sync"
 	"time"
 
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/database/dbcore"
-	"github.com/komari-monitor/komari/database/models"
-	messageevent "github.com/komari-monitor/komari/database/models/messageEvent"
-	"github.com/komari-monitor/komari/utils/messageSender"
-	"github.com/komari-monitor/komari/utils/renewal"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/database/dbcore"
+	"github.com/Fearless743/komari/database/models"
+	messageevent "github.com/Fearless743/komari/database/models/messageEvent"
+	"github.com/Fearless743/komari/utils/messageSender"
+	"github.com/Fearless743/komari/utils/renewal"
 )
 
 // notificationState 保存单个客户端的通知状态。

@@ -2,10 +2,10 @@ package public
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/database/accounts"
-	"github.com/komari-monitor/komari/database/dbcore"
-	"github.com/komari-monitor/komari/database/models"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/database/accounts"
+	"github.com/Fearless743/komari/database/dbcore"
+	"github.com/Fearless743/komari/database/models"
 )
 
 func GetClientRecentRecords(c *gin.Context) {

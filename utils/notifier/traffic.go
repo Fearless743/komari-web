@@ -7,11 +7,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/utils/messageSender"
-	"github.com/komari-monitor/komari/ws"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/utils/messageSender"
+	"github.com/Fearless743/komari/ws"
 	cache "github.com/patrickmn/go-cache"
 )
 

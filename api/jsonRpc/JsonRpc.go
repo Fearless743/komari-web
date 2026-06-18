@@ -11,11 +11,11 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database/accounts"
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/utils/rpc"
-	"github.com/komari-monitor/komari/ws"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database/accounts"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/utils/rpc"
+	"github.com/Fearless743/komari/ws"
 )
 
 // OnInternalRequest 内部调用 RPC 方法，支持权限控制

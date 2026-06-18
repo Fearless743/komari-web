@@ -13,13 +13,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/common"
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/database/tasks"
-	"github.com/komari-monitor/komari/utils/notifier"
-	"github.com/komari-monitor/komari/ws"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/common"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/database/tasks"
+	"github.com/Fearless743/komari/utils/notifier"
+	"github.com/Fearless743/komari/ws"
 	"github.com/patrickmn/go-cache"
 )
 

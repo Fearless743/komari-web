@@ -2,12 +2,12 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/utils/messageSender"
-	"github.com/komari-monitor/komari/utils/messageSender/factory"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/utils/messageSender"
+	"github.com/Fearless743/komari/utils/messageSender/factory"
 )
 
 func GetMessageSenderProvider(c *gin.Context) {

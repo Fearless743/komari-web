@@ -1,8 +1,8 @@
 package clipboard
 
 import (
-	"github.com/komari-monitor/komari/database/dbcore"
-	"github.com/komari-monitor/komari/database/models"
+	"github.com/Fearless743/komari/database/dbcore"
+	"github.com/Fearless743/komari/database/models"
 )
 
 // CreateClipboard 创建剪贴板记录

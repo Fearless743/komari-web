@@ -5,8 +5,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/ws"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/ws"
 )
 
 // PingTaskManager 管理定时器和任务

@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/gorilla/websocket"
-	"github.com/komari-monitor/komari/database/auditlog"
+	"github.com/Fearless743/komari/database/auditlog"
 )
 
 func ForwardTerminal(id string) {

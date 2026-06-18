@@ -4,10 +4,10 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/database/auditlog"
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/database/records"
-	"github.com/komari-monitor/komari/ws"
+	"github.com/Fearless743/komari/database/auditlog"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/database/records"
+	"github.com/Fearless743/komari/ws"
 )
 
 func AddClient(c *gin.Context) {

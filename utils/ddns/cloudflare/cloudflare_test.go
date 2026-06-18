@@ -7,7 +7,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/komari-monitor/komari/utils/ddns/factory"
+	"github.com/Fearless743/komari/utils/ddns/factory"
 )
 
 func TestSyncCreatesRecordWhenLookupMisses(t *testing.T) {

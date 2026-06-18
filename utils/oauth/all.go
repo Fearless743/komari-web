@@ -1,11 +1,11 @@
 package oauth
 
 import (
-	_ "github.com/komari-monitor/komari/utils/oauth/cloudflare"
-	_ "github.com/komari-monitor/komari/utils/oauth/factory"
-	_ "github.com/komari-monitor/komari/utils/oauth/generic"
-	_ "github.com/komari-monitor/komari/utils/oauth/github"
-	_ "github.com/komari-monitor/komari/utils/oauth/qq"
+	_ "github.com/Fearless743/komari/utils/oauth/cloudflare"
+	_ "github.com/Fearless743/komari/utils/oauth/factory"
+	_ "github.com/Fearless743/komari/utils/oauth/generic"
+	_ "github.com/Fearless743/komari/utils/oauth/github"
+	_ "github.com/Fearless743/komari/utils/oauth/qq"
 )
 
 func All() {

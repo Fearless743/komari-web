@@ -1,9 +1,9 @@
 package ddns
 
 import (
-	_ "github.com/komari-monitor/komari/utils/ddns/cloudflare"
-	_ "github.com/komari-monitor/komari/utils/ddns/empty"
-	_ "github.com/komari-monitor/komari/utils/ddns/webhook"
+	_ "github.com/Fearless743/komari/utils/ddns/cloudflare"
+	_ "github.com/Fearless743/komari/utils/ddns/empty"
+	_ "github.com/Fearless743/komari/utils/ddns/webhook"
 )
 
 func All() {

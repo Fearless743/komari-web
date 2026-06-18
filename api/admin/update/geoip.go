@@ -2,9 +2,9 @@ package update
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/database/auditlog"
-	"github.com/komari-monitor/komari/utils/geoip"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/database/auditlog"
+	"github.com/Fearless743/komari/utils/geoip"
 )
 
 func UpdateMmdbGeoIP(c *gin.Context) {

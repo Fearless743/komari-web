@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/komari-monitor/komari/utils/ddns/factory"
+	"github.com/Fearless743/komari/utils/ddns/factory"
 )
 
 var cloudflareAPIBaseURL = "https://api.cloudflare.com/client/v4"
@@ -64,11 +64,6 @@ func (p *Provider) Sync(ctx factory.SyncContext) (factory.SyncResult, error) {
 	if v, ok := ctx.ProviderConfig["hostname"].(string); ok {
 		hostname = strings.TrimSpace(v)
 	}
-	recordID := strings.TrimSpace(p.RecordID)
-	if rid, ok := ctx.ProviderConfig["record_id"].(string); ok && strings.TrimSpace(rid) != "" {
-		recordID = strings.TrimSpace(rid)
-	}
-
 	payload := map[string]any{
 		"type":    recordType,
 		"content": content,
@@ -79,6 +74,11 @@ func (p *Provider) Sync(ctx factory.SyncContext) (factory.SyncResult, error) {
 	if hostname != "" {
 		payload["name"] = hostname
 	}
+	recordID := strings.TrimSpace(p.RecordID)
+	if rid, ok := ctx.ProviderConfig["record_id"].(string); ok && strings.TrimSpace(rid) != "" {
+		recordID = strings.TrimSpace(rid)
+	}
+
 	if recordID == "" {
 		if hostname == "" {
 			return factory.SyncResult{}, fmt.Errorf("cloudflare record id is not configured and hostname is empty")
@@ -88,7 +88,11 @@ func (p *Provider) Sync(ctx factory.SyncContext) (factory.SyncResult, error) {
 			if !isRecordNotFound(err) {
 				return factory.SyncResult{}, err
 			}
-			createdID, createErr := p.createRecord(payload)
+			createPayload := make(map[string]any)
+			for k, v := range payload {
+				createPayload[k] = v
+			}
+			createdID, createErr := p.createRecord(createPayload)
 			if createErr != nil {
 				return factory.SyncResult{}, createErr
 			}
@@ -137,7 +141,7 @@ func (p *Provider) Sync(ctx factory.SyncContext) (factory.SyncResult, error) {
 
 func (p *Provider) lookupRecordID(hostname, recordType string) (string, error) {
 	endpoint := fmt.Sprintf(
-		"%s/zones/%s/dns_records?type=%s&name=%s",
+		"%s/zones/%s/dns_records?type=%s&name=%s&per_page=10",
 		cloudflareAPIBaseURL,
 		p.ZoneID,
 		url.QueryEscape(recordType),
@@ -163,7 +167,10 @@ func (p *Provider) lookupRecordID(hostname, recordType string) (string, error) {
 			Message string `json:"message"`
 		} `json:"errors"`
 		Result []struct {
-			ID string `json:"id"`
+			ID      string `json:"id"`
+			Name    string `json:"name"`
+			Type    string `json:"type"`
+			Comment string `json:"comment"`
 		} `json:"result"`
 	}
 	if err := json.Unmarshal(body, &result); err != nil {
@@ -178,6 +185,11 @@ func (p *Provider) lookupRecordID(hostname, recordType string) (string, error) {
 	}
 	if len(result.Result) == 0 {
 		return "", fmt.Errorf("cloudflare record not found for hostname=%s type=%s", hostname, recordType)
+	}
+	for _, r := range result.Result {
+		if strings.Contains(r.Comment, "updated by Komari") {
+			return r.ID, nil
+		}
 	}
 	return result.Result[0].ID, nil
 }

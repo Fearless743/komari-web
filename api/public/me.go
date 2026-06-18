@@ -1,7 +1,7 @@
 package public
 
 import (
-	"github.com/komari-monitor/komari/database/accounts"
+	"github.com/Fearless743/komari/database/accounts"
 
 	"github.com/gin-gonic/gin"
 )

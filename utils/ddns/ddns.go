@@ -8,11 +8,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database"
-	"github.com/komari-monitor/komari/database/auditlog"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/utils/ddns/factory"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database"
+	"github.com/Fearless743/komari/database/auditlog"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/utils/ddns/factory"
 )
 
 var (
@@ -20,7 +20,11 @@ var (
 	mu              sync.Mutex
 	once            sync.Once
 	lastState       sync.Map
+	retryHistory    sync.Map
 )
+
+const maxRetries = 3
+const retryBaseDelay = 2 * time.Second
 
 func init() {
 	All()
@@ -77,8 +81,6 @@ func Initialize() {
 }
 
 func LoadProvider(name string, addition string) error {
-	mu.Lock()
-	defer mu.Unlock()
 	constructor, exists := factory.GetConstructor(name)
 	if !exists {
 		return fmt.Errorf("ddns provider not found: %s", name)
@@ -90,10 +92,12 @@ func LoadProvider(name string, addition string) error {
 	if err := provider.Init(); err != nil {
 		return err
 	}
+	mu.Lock()
 	if currentProvider != nil {
 		_ = currentProvider.Destroy()
 	}
 	currentProvider = provider
+	mu.Unlock()
 	return nil
 }
 
@@ -150,7 +154,7 @@ func SyncClient(client models.Client, triggeredBy string, force bool) error {
 		Force:          force,
 		ProviderConfig: cfgMap,
 	}
-	result, err := provider.Sync(ctx)
+	result, err := SyncWithRetry(provider, ctx)
 	if err != nil {
 		auditlog.EventLog("error", fmt.Sprintf("DDNS sync failed for %s: %v", client.UUID, err))
 		return err
@@ -196,4 +200,88 @@ func mergeClientProviderConfig(cfg map[string]any, client models.Client) map[str
 		result["record_type"] = client.DdnsRecordType
 	}
 	return result
+}
+
+type retryInfo struct {
+	consecutiveFailures int
+	lastFailureTime     time.Time
+}
+
+func getRetryCount(clientUUID string) int {
+	if v, ok := retryHistory.Load(clientUUID); ok {
+		if r, ok := v.(retryInfo); ok {
+			if time.Since(r.lastFailureTime) > 5*time.Minute {
+				retryHistory.Delete(clientUUID)
+				return 0
+			}
+			return r.consecutiveFailures
+		}
+	}
+	return 0
+}
+
+func incrementRetryCount(clientUUID string) {
+	current := getRetryCount(clientUUID)
+	retryHistory.Store(clientUUID, retryInfo{
+		consecutiveFailures: current + 1,
+		lastFailureTime:     time.Now(),
+	})
+}
+
+func resetRetryCount(clientUUID string) {
+	retryHistory.Delete(clientUUID)
+}
+
+func SyncWithRetry(provider factory.IDdnsProvider, ctx factory.SyncContext) (factory.SyncResult, error) {
+	var result factory.SyncResult
+	var lastErr error
+
+	for attempt := 0; attempt <= maxRetries; attempt++ {
+		if attempt > 0 {
+			delay := retryBaseDelay * time.Duration(1<<(attempt-1))
+			if attempt > maxRetries {
+				delay = retryBaseDelay * time.Duration(1<<(maxRetries-1))
+			}
+			log.Printf("DDNS retry %d/%d for client %s, waiting %v", attempt, maxRetries, ctx.ClientUUID, delay)
+			time.Sleep(delay)
+		}
+		result, lastErr = provider.Sync(ctx)
+		if lastErr == nil {
+			resetRetryCount(ctx.ClientUUID)
+			recordSyncHistory(ctx, "success", "")
+			return result, nil
+		}
+	}
+
+	incrementRetryCount(ctx.ClientUUID)
+	recordSyncHistory(ctx, "failed", lastErr.Error())
+	return result, fmt.Errorf("ddns sync failed after %d retries: %w", maxRetries, lastErr)
+}
+
+func recordSyncHistory(ctx factory.SyncContext, status string, errorMsg string) {
+	hostname := getString(ctx.ProviderConfig, "hostname")
+	recordID := getString(ctx.ProviderConfig, "record_id")
+	recordType := getString(ctx.ProviderConfig, "record_type")
+	history := models.DdnsSyncHistory{
+		ClientUUID:  ctx.ClientUUID,
+		ClientName:  ctx.ClientName,
+		Hostname:    hostname,
+		RecordType:  recordType,
+		IPV4:        ctx.IPv4,
+		IPV6:        ctx.IPv6,
+		RecordID:    recordID,
+		Status:      status,
+		Error:       errorMsg,
+		TriggeredBy: ctx.TriggeredBy,
+	}
+	if err := database.SaveDdnsSyncHistory(history); err != nil {
+		log.Printf("Failed to save DDNS sync history for %s: %v", ctx.ClientUUID, err)
+	}
+}
+
+func getString(m map[string]any, key string) string {
+	if v, ok := m[key].(string); ok {
+		return v
+	}
+	return ""
 }

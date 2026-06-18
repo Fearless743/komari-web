@@ -4,9 +4,9 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/database/tasks"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/database/tasks"
 )
 
 func TaskResult(c *gin.Context) {

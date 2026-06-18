@@ -2,13 +2,13 @@ package admin
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database"
-	"github.com/komari-monitor/komari/database/accounts"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/utils/oauth"
-	"github.com/komari-monitor/komari/utils/oauth/factory"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database"
+	"github.com/Fearless743/komari/database/accounts"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/utils/oauth"
+	"github.com/Fearless743/komari/utils/oauth/factory"
 )
 
 func BindingExternalAccount(c *gin.Context) {

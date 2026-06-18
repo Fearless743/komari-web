@@ -1,4 +1,4 @@
-module github.com/komari-monitor/komari
+module github.com/Fearless743/komari
 
 go 1.24.0
 

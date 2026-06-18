@@ -3,9 +3,9 @@ package tasks
 import (
 	"time"
 
-	"github.com/komari-monitor/komari/database/dbcore"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/utils"
+	"github.com/Fearless743/komari/database/dbcore"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/utils"
 	"gorm.io/gorm"
 )
 

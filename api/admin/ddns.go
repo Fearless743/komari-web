@@ -7,13 +7,13 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database"
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/utils/ddns"
-	"github.com/komari-monitor/komari/utils/ddns/factory"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/utils/ddns"
+	"github.com/Fearless743/komari/utils/ddns/factory"
 )
 
 func GetDdnsProvider(c *gin.Context) {
@@ -48,6 +48,16 @@ func SetDdnsProvider(c *gin.Context) {
 	_, exists := factory.GetConstructor(ddnsConfig.Name)
 	if !exists {
 		api.RespondError(c, 404, "Provider not found: "+ddnsConfig.Name)
+		return
+	}
+	constructor, _ := factory.GetConstructor(ddnsConfig.Name)
+	provider := constructor()
+	if err := json.Unmarshal([]byte(ddnsConfig.Addition), provider.GetConfiguration()); err != nil {
+		api.RespondError(c, 400, "Invalid provider configuration JSON: "+err.Error())
+		return
+	}
+	if err := provider.Init(); err != nil {
+		api.RespondError(c, 400, "Provider initialization failed: "+err.Error())
 		return
 	}
 	if err := database.SaveDdnsConfig(&ddnsConfig); err != nil {
@@ -127,4 +137,32 @@ func GetCloudflareZones(c *gin.Context) {
 	}
 
 	api.RespondSuccess(c, result.Result)
+}
+
+func GetDdnsSyncHistory(c *gin.Context) {
+	limit, _ := strconv.Atoi(c.DefaultQuery("limit", "50"))
+	clientUUID := c.Query("client_uuid")
+	if limit <= 0 || limit > 200 {
+		limit = 50
+	}
+	histories, err := database.GetDdnsSyncHistory(clientUUID, limit)
+	if err != nil {
+		api.RespondError(c, 500, "Failed to get DDNS sync history: "+err.Error())
+		return
+	}
+	api.RespondSuccess(c, histories)
+}
+
+func DeleteDdnsSyncHistory(c *gin.Context) {
+	days := c.DefaultQuery("before_days", "30")
+	d, err := strconv.Atoi(days)
+	if err != nil || d <= 0 {
+		d = 30
+	}
+	beforeTime := time.Now().AddDate(0, 0, -d)
+	if err := database.DeleteDdnsSyncHistoryBefore(models.LocalTime(beforeTime)); err != nil {
+		api.RespondError(c, 500, "Failed to delete DDNS sync history: "+err.Error())
+		return
+	}
+	api.RespondSuccess(c, gin.H{"message": "DDNS sync history cleaned"})
 }

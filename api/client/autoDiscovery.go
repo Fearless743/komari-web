@@ -2,10 +2,10 @@ package client
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/komari-monitor/komari/api"
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/utils"
+	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/utils"
 )
 
 func RegisterClient(c *gin.Context) {

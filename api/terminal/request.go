@@ -7,9 +7,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/utils"
-	"github.com/komari-monitor/komari/ws"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/utils"
+	"github.com/Fearless743/komari/ws"
 )
 
 func RequestTerminal(c *gin.Context) {

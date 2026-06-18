@@ -13,11 +13,11 @@ import (
 	"time"
 
 	"github.com/glebarez/sqlite"
-	"github.com/komari-monitor/komari/cmd/flags"
-	"github.com/komari-monitor/komari/common"
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database/models"
-	logutil "github.com/komari-monitor/komari/utils/log"
+	"github.com/Fearless743/komari/cmd/flags"
+	"github.com/Fearless743/komari/common"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database/models"
+	logutil "github.com/Fearless743/komari/utils/log"
 	"gorm.io/gorm"
 )
 
@@ -462,6 +462,7 @@ func GetDBInstance() *gorm.DB {
 			&models.OidcProvider{},
 			&models.MessageSenderProvider{},
 			&models.DdnsProvider{},
+			&models.DdnsSyncHistory{},
 			&models.ThemeConfiguration{},
 		)
 		if err != nil {

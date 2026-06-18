@@ -1,6 +1,6 @@
 package factory
 
-import "github.com/komari-monitor/komari/utils/item"
+import "github.com/Fearless743/komari/utils/item"
 
 type IDdnsProvider interface {
 	GetName() string

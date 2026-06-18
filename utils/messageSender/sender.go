@@ -8,11 +8,11 @@ import (
 	"sync"
 	"time"
 
-	"github.com/komari-monitor/komari/config"
-	"github.com/komari-monitor/komari/database"
-	"github.com/komari-monitor/komari/database/auditlog"
-	"github.com/komari-monitor/komari/database/models"
-	"github.com/komari-monitor/komari/utils/messageSender/factory"
+	"github.com/Fearless743/komari/config"
+	"github.com/Fearless743/komari/database"
+	"github.com/Fearless743/komari/database/auditlog"
+	"github.com/Fearless743/komari/database/models"
+	"github.com/Fearless743/komari/utils/messageSender/factory"
 )
 
 var (

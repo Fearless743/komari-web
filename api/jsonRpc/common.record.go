@@ -7,12 +7,12 @@ import (
 	"sort"
 	"time"
 
-	"github.com/komari-monitor/komari/database/clients"
-	"github.com/komari-monitor/komari/database/dbcore"
-	"github.com/komari-monitor/komari/database/models"
-	recordsdb "github.com/komari-monitor/komari/database/records"
-	"github.com/komari-monitor/komari/database/tasks"
-	"github.com/komari-monitor/komari/utils/rpc"
+	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/database/dbcore"
+	"github.com/Fearless743/komari/database/models"
+	recordsdb "github.com/Fearless743/komari/database/records"
+	"github.com/Fearless743/komari/database/tasks"
+	"github.com/Fearless743/komari/utils/rpc"
 )
 
 func init() {
