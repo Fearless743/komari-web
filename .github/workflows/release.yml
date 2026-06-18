@@ -25,33 +25,26 @@ jobs:
           # Windows
           - goos: windows
             goarch: amd64
-            zig_target_triple: x86_64-windows-gnu
             binary_extension: .exe
           - goos: windows
             goarch: arm64
-            zig_target_triple: aarch64-windows-gnu
             binary_extension: .exe
           - goos: windows
             goarch: 386
-            zig_target_triple: x86-windows-gnu
             binary_extension: .exe
 
           # Linux
           - goos: linux
             goarch: amd64
-            zig_target_triple: x86_64-linux-musl
             binary_extension: ""
           - goos: linux
             goarch: arm64
-            zig_target_triple: aarch64-linux-musl
             binary_extension: ""
           - goos: linux
             goarch: 386
-            zig_target_triple: x86-linux-musl
             binary_extension: ""
           - goos: linux
             goarch: riscv64
-            zig_target_triple: riscv64-linux-musl
             binary_extension: ""
 
         exclude:
@@ -87,20 +80,11 @@ jobs:
         with:
           go-version: "1.23"
 
-      - name: Install Zig cross-compiler toolchain
-        run: |
-          sudo apt-get update # Update apt package lists
-          sudo apt-get install -y build-essential curl
-          wget https://ziglang.org/download/0.14.1/zig-x86_64-linux-0.14.1.tar.xz
-          sudo tar -C /usr/local -Jxf zig-x86_64-linux-0.14.1.tar.xz
-          echo "PATH=$PATH:/usr/local/zig-x86_64-linux-0.14.1" >> $GITHUB_ENV
-
       - name: Build binary
         env:
           GOOS: ${{ matrix.goos }}
           GOARCH: ${{ matrix.goarch }}
-          CGO_ENABLED: 1
-          CC: zig cc -target ${{ matrix.zig_target_triple }}
+          CGO_ENABLED: ${{ (matrix.goos == 'linux' && matrix.goarch == 'amd64') && '1' || '0' }}
           GIN_MODE: release
         run: |
           BINARY_NAME=komari-${{ matrix.goos }}-${{ matrix.goarch }}
