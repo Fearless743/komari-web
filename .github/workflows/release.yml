@@ -19,15 +19,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        goos: [linux, windows]
-        goarch: [amd64]
         include:
-          - goos: windows
-            goarch: amd64
-            binary_extension: .exe
           - goos: linux
             goarch: amd64
             binary_extension: ""
+          - goos: windows
+            goarch: amd64
+            binary_extension: .exe
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -81,24 +79,19 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        goos: [linux, windows]
-        goarch: [arm64, 386, riscv64]
         include:
-          - goos: windows
-            goarch: amd64
-            binary_extension: .exe
+          - goos: linux
+            goarch: arm64
+            binary_extension: ""
+          - goos: linux
+            goarch: 386
+            binary_extension: ""
+          - goos: linux
+            goarch: riscv64
+            binary_extension: ""
           - goos: windows
             goarch: arm64
             binary_extension: .exe
-          - goos: windows
-            goarch: 386
-            binary_extension: .exe
-
-        exclude:
-          - goos: windows
-            goarch: riscv64
-          - goos: windows
-            goarch: 386
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -135,10 +128,7 @@ jobs:
           CGO_ENABLED: 0
           GIN_MODE: release
         run: |
-          BINARY_NAME=komari-${{ matrix.goos }}-${{ matrix.goarch }}
-          if [ -n "${{ matrix.binary_extension }}" ]; then
-            BINARY_NAME=${BINARY_NAME}${{ matrix.binary_extension }}
-          fi
+          BINARY_NAME=komari-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.binary_extension }}
           VERSION="${{ github.event.release.tag_name }}"
           VERSION_HASH="${{ github.sha }}"
           go build -trimpath -ldflags="-s -w -X github.com/Fearless743/komari/utils.CurrentVersion=${VERSION} -X github.com/Fearless743/komari/utils.VersionHash=${VERSION_HASH}" -o $BINARY_NAME
@@ -147,8 +137,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          BINARY_NAME=komari-${{ matrix.goos }}-${{ matrix.goarch }}
-          if [ -n "${{ matrix.binary_extension }}" ]; then
-            BINARY_NAME=${BINARY_NAME}${{ matrix.binary_extension }}
-          fi
+          BINARY_NAME=komari-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.binary_extension }}
           gh release upload --clobber ${{ github.event.release.tag_name }} $BINARY_NAME --repo ${{ github.repository }}
