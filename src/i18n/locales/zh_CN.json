@@ -539,8 +539,15 @@
         "headers": "请求头",
         "headers_help": "JSON 格式，如 {\"Authorization\":\"Bearer xxx\"}。",
         "body": "请求体模板",
-        "body_help": "支持 {{client_uuid}} {{client_name}} {{ipv4}} {{ipv6}} {{triggered_by}} 占位符。"
+        "body_help": "支持 {{client_uuid}} {{client_name}} {{ipv4}} {{ipv6}} {{triggered_by}} 占位符。",
+        "response_json_path": "响应 JSON 路径",
+        "response_json_path_help": "从响应中提取 record_id 的 JSON 路径，例如 data.record_id"
       },
+      "sync_history": "同步历史",
+      "refresh": "刷新",
+      "clear_history": "清除历史",
+      "confirm_clear_history": "确定要清除同步历史吗？",
+      "no_history": "暂无同步记录",
       "empty": {}
     },
     "general": {

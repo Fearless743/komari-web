@@ -539,8 +539,15 @@
         "headers": "Headers",
         "headers_help": "JSON format, e.g. {\"Authorization\":\"Bearer xxx\"}.",
         "body": "Body Template",
-        "body_help": "Supports {{client_uuid}} {{client_name}} {{ipv4}} {{ipv6}} {{triggered_by}} placeholders."
+        "body_help": "Supports {{client_uuid}} {{client_name}} {{ipv4}} {{ipv6}} {{triggered_by}} placeholders.",
+        "response_json_path": "Response JSON Path",
+        "response_json_path_help": "JSON path to extract record_id from response, e.g. data.record_id"
       },
+      "sync_history": "Sync History",
+      "refresh": "Refresh",
+      "clear_history": "Clear History",
+      "confirm_clear_history": "Are you sure you want to clear sync history?",
+      "no_history": "No sync records yet",
       "empty": {}
     },
     "general": {

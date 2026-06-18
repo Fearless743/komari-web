@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { Text, Flex, Button } from "@radix-ui/themes";
-import { CloudIcon, LinkIcon, BanIcon } from "lucide-react";
+import { Text, Flex, Button, Badge } from "@radix-ui/themes";
+import { CloudIcon, LinkIcon, BanIcon, HistoryIcon, Trash2Icon } from "lucide-react";
 import { updateSettingsWithToast, useSettings } from "@/lib/api";
 import {
   SettingCardButton,
@@ -12,6 +12,21 @@ import { toast } from "sonner";
 import Loading from "@/components/loading";
 import React from "react";
 import { renderProviderInputs } from "@/utils/renderProviders";
+
+interface SyncHistoryEntry {
+  id: number;
+  client_uuid: string;
+  client_name: string;
+  hostname: string;
+  record_type: string;
+  ipv4: string;
+  ipv6: string;
+  record_id: string;
+  status: string;
+  error: string;
+  triggered_by: string;
+  synced_at: string;
+}
 
 const providerMeta: Record<string, { label: string; icon: React.ReactNode }> = {
   empty: {
@@ -52,6 +67,27 @@ const DdnsSettings = () => {
   const [providerError, setProviderError] = React.useState("");
   const [cfZones, setCfZones] = React.useState<any[]>([]);
   const [fetchingCf, setFetchingCf] = React.useState(false);
+  const [syncHistory, setSyncHistory] = React.useState<SyncHistoryEntry[]>([]);
+  const [fetchingHistory, setFetchingHistory] = React.useState(false);
+
+  const loadSyncHistory = React.useCallback(async () => {
+    setFetchingHistory(true);
+    try {
+      const res = await fetch("/api/admin/settings/ddns/history?limit=100");
+      const data = await res.json();
+      if (data.status === "success") {
+        setSyncHistory(data.data || []);
+      }
+    } catch (error) {
+      console.error("Failed to load DDNS sync history:", error);
+    } finally {
+      setFetchingHistory(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    loadSyncHistory();
+  }, [loadSyncHistory]);
 
   React.useEffect(() => {
     if (loading) return;
@@ -235,6 +271,7 @@ const DdnsSettings = () => {
               throw new Error(data.message || t("common.error"));
             }
             toast.success(t("common.success"));
+            loadSyncHistory();
           } catch (error) {
             toast.error(error instanceof Error ? error.message : String(error));
           }
@@ -242,8 +279,80 @@ const DdnsSettings = () => {
       >
         GO
       </SettingCardButton>
+      <div className="bg-card border rounded-lg p-3 mt-2 space-y-2" style={{ borderColor: 'var(--gray-6)' }}>
+        <Flex justify="between" align="center">
+          <Flex gap="2" align="center">
+            <HistoryIcon size={16} />
+            <Text size="2" weight="bold">{t("settings.ddns.sync_history", "同步历史")}</Text>
+          </Flex>
+          <Flex gap="2">
+            <Button size="1" variant="soft" onClick={loadSyncHistory} disabled={fetchingHistory}>
+              {fetchingHistory ? t("common.loading", "加载中...") : t("settings.ddns.refresh", "刷新")}
+            </Button>
+            <Button 
+              size="1" 
+              variant="outline" 
+              color="red"
+              onClick={async () => {
+                if (!confirm(t("settings.ddns.confirm_clear_history", "确定要清除同步历史吗？"))) return;
+                try {
+                  const res = await fetch("/api/admin/settings/ddns/history?before_days=7", { method: "DELETE" });
+                  const data = await res.json();
+                  if (data.status !== "success") throw new Error(data.message);
+                  toast.success(t("common.success"));
+                  loadSyncHistory();
+                } catch (error) {
+                  toast.error(error instanceof Error ? error.message : String(error));
+                }
+              }}
+            >
+              <Trash2Icon size={14} />
+              {t("settings.ddns.clear_history", "清除历史")}
+            </Button>
+          </Flex>
+        </Flex>
+        {syncHistory.length > 0 ? (
+          <div className="flex flex-col gap-2 mt-2 max-h-60 overflow-y-auto text-sm">
+            {syncHistory.map((entry) => (
+              <div key={entry.id} className="flex items-center gap-2 p-2 rounded border" style={{ borderColor: 'var(--gray-6)' }}>
+                <Badge color={entry.status === "success" ? "green" : "red"} variant="soft">
+                  {entry.status}
+                </Badge>
+                <span className="font-medium min-w-[80px]">{entry.client_name || entry.client_uuid?.slice(0, 8)}</span>
+                <span className="text-muted-foreground flex-1 truncate">{entry.hostname || "-"}</span>
+                <span className="text-xs text-muted-foreground font-mono">{entry.ipv4 || entry.ipv6 || "-"}</span>
+                <span className="text-xs text-muted-foreground">{new Date(entry.synced_at).toLocaleString()}</span>
+                {entry.error && (
+                  <Tooltip content={entry.error}>
+                    <Button size="1" variant="ghost" color="red" aria-label="Error">!</Button>
+                  </Tooltip>
+                )}
+              </div>
+            ))}
+          </div>
+        ) : (
+          <Text size="2" color="gray" className="mt-2">
+            {fetchingHistory ? t("common.loading", "加载中...") : t("settings.ddns.no_history", "暂无同步记录")}
+          </Text>
+        )}
+      </div>
     </>
   );
 };
+
+function Tooltip({ content, children }: { content: string; children: React.ReactNode }) {
+  const [show, setShow] = React.useState(false);
+  return (
+    <div className="relative" onMouseEnter={() => setShow(true)} onMouseLeave={() => setShow(false)}>
+      {children}
+      {show && (
+        <div className="absolute z-50 bottom-full left-1/2 -translate-x-1/2 mb-1 px-2 py-1 text-xs bg-gray-900 text-white rounded whitespace-nowrap max-w-xs truncate"
+             style={{ minWidth: '100px' }}>
+          {content}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default DdnsSettings;
