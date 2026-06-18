@@ -71,12 +71,12 @@ jobs:
           git clone https://github.com/Fearless743/komari-web web
           cd web
           npm install
-          npm run build
-          cd ..
-          mkdir -p public/defaultTheme/dist
-          rm -rf public/defaultTheme/dist/*
-          cp -r web/dist/* public/defaultTheme/dist/
-          cp -f web/komari-theme.json public/defaultTheme/
+           npm run build
+           cd ..
+           rm -rf public/defaultTheme/dist
+           mkdir -p public/defaultTheme
+           mv web/dist public/defaultTheme/dist
+           cp -f web/komari-theme.json public/defaultTheme/
           if [ -f web/preview.png ]; then cp -f web/preview.png public/defaultTheme/; fi
           if [ -f web/perview.png ]; then cp -f web/perview.png public/defaultTheme/; fi
           # Compatibility: ensure both filenames exist if only one is present
