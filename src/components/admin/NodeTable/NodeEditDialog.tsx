@@ -1,0 +1,192 @@
+import * as React from "react";
+import { z } from "zod";
+import {
+  schema,
+  type ClientFormData,
+} from "@/components/admin/NodeTable/schema/node";
+import { DataTableRefreshContext } from "@/components/admin/NodeTable/schema/DataTableRefreshContext";
+import { Pencil } from "lucide-react";
+import { t } from "i18next";
+import { toast } from "sonner";
+import { Button, Dialog, Flex, IconButton, TextField, Switch } from "@radix-ui/themes";
+
+export function EditDialog({ item }: { item: z.infer<typeof schema> }) {
+  const [form, setForm] = React.useState<ClientFormData & { weight: number }>({
+    name: item.name || "",
+    token: item.token || "",
+    remark: item.remark || "",
+    public_remark: item.public_remark || "",
+    ddns_enabled: item.ddns_enabled || false,
+    ddns_hostname: item.ddns_hostname || "",
+    ddns_record_id: item.ddns_record_id || "",
+    ddns_record_type: item.ddns_record_type || "inherit",
+    weight: item.weight || 0,
+  });
+  const [loading, setLoading] = React.useState(false);
+  const [open, setOpen] = React.useState(false);
+
+  const refreshTable = React.useContext(DataTableRefreshContext);
+
+  function saveClientData(
+    uuid: string,
+    formData: ClientFormData,
+    setLoadingCallback: (b: boolean) => void,
+    onSuccess?: () => void
+  ) {
+    setLoadingCallback(true);
+    fetch(`/api/admin/client/${uuid}/edit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(formData),
+    })
+      .then(async (res) => {
+        if (res.status === 200) {
+          onSuccess?.();
+          refreshTable?.();
+          toast.success(t("admin.nodeEdit.saveSuccess", "保存成功"));
+          return;
+        }
+        const data = await res.json().catch(() => null);
+        toast.error(data?.message || t("admin.nodeEdit.saveError", "保存失败"));
+      })
+      .catch(() => {
+        toast.error(t("admin.nodeEdit.saveError", "保存失败"));
+      })
+      .finally(() => setLoadingCallback(false));
+  }
+
+  return (
+    <Dialog.Root open={open} onOpenChange={setOpen}>
+      <Dialog.Trigger>
+        <IconButton variant="ghost">
+          <Pencil className="p-1" />
+        </IconButton>
+      </Dialog.Trigger>
+      <Dialog.Content>
+        <Dialog.Title>{t("admin.nodeEdit.editInfo", "编辑信息")}</Dialog.Title>
+        <div className="flex flex-col gap-4">
+          <div>
+            <label className="block mb-1 text-sm font-medium text-muted-foreground">
+              {t("admin.nodeEdit.name", "名称")}
+            </label>
+            <TextField.Root
+              value={form.name}
+              onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
+              placeholder={t("admin.nodeEdit.namePlaceholder", "请输入名称")}
+              disabled={loading}
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm font-medium text-muted-foreground">
+              {t("admin.nodeEdit.token", "Token 令牌")}
+            </label>
+            <TextField.Root
+              value={form.token}
+              onChange={(e) => setForm((f) => ({ ...f, token: e.target.value }))}
+              placeholder={t("admin.nodeEdit.tokenPlaceholder", "请输入 Token")}
+              disabled={loading}
+              readOnly
+              className="bg-gray-200"
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm font-medium text-muted-foreground">
+              {t("admin.nodeEdit.remark", "私有备注")}
+            </label>
+            <TextField.Root
+              value={form.remark}
+              onChange={(e) => setForm((f) => ({ ...f, remark: e.target.value }))}
+              placeholder={t("admin.nodeEdit.remarkPlaceholder", "请输入私有备注")}
+              disabled={loading}
+            />
+          </div>
+          <div>
+            <label className="block mb-1 text-sm font-medium text-muted-foreground">
+              {t("admin.nodeEdit.publicRemark", "公开备注")}
+            </label>
+            <TextField.Root
+              value={form.public_remark}
+              onChange={(e) => setForm((f) => ({ ...f, public_remark: e.target.value }))}
+              placeholder={t("admin.nodeEdit.publicRemarkPlaceholder", "请输入公开备注")}
+              disabled={loading}
+            />
+          </div>
+          <div className="border rounded-lg p-3 space-y-3">
+            <label className="block text-sm font-medium text-muted-foreground">
+              {t("admin.nodeEdit.ddnsTitle", "DDNS")}
+            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-muted-foreground">
+                {t("admin.nodeEdit.ddnsEnabled", "启用节点级 DDNS")}
+              </label>
+              <Switch
+                checked={!!form.ddns_enabled}
+                onCheckedChange={(checked) => setForm((f) => ({ ...f, ddns_enabled: checked }))}
+                disabled={loading}
+              />
+            </div>
+            <div>
+              <label className="block mb-1 text-sm font-medium text-muted-foreground">
+                {t("admin.nodeEdit.ddnsHostname", "Hostname")}
+              </label>
+              <TextField.Root
+                value={form.ddns_hostname || ""}
+                onChange={(e) => setForm((f) => ({ ...f, ddns_hostname: e.target.value }))}
+                placeholder={t("admin.nodeEdit.ddnsHostnamePlaceholder", "example.com")}
+                disabled={loading}
+              />
+            </div>
+            <div>
+              <label className="block mb-1 text-sm font-medium text-muted-foreground">
+                {t("admin.nodeEdit.ddnsRecordId", "Record ID")}
+              </label>
+              <TextField.Root
+                value={form.ddns_record_id || ""}
+                onChange={(e) => setForm((f) => ({ ...f, ddns_record_id: e.target.value }))}
+                placeholder={t("admin.nodeEdit.ddnsRecordIdPlaceholder", "Cloudflare Record ID")}
+                disabled={loading}
+              />
+            </div>
+            <div>
+              <label className="block mb-1 text-sm font-medium text-muted-foreground">
+                {t("admin.nodeEdit.ddnsRecordType", "Record Type")}
+              </label>
+              <select
+                className="w-full border rounded px-3 py-2 bg-background"
+                value={form.ddns_record_type || "inherit"}
+                onChange={(e) => setForm((f) => ({ ...f, ddns_record_type: e.target.value }))}
+                disabled={loading}
+              >
+                <option value="inherit">{t("admin.nodeEdit.ddnsRecordTypeInherit", "继承全局")}</option>
+                <option value="A">A</option>
+                <option value="AAAA">AAAA</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <Flex gap="2" align={"start"} className="mt-4">
+          <Button
+            type="submit"
+            className="w-full"
+            onClick={() => {
+              const payload: ClientFormData = {
+                name: form.name,
+                token: form.token,
+                remark: form.remark,
+                public_remark: form.public_remark,
+                ddns_enabled: form.ddns_enabled,
+                ddns_hostname: form.ddns_hostname,
+                ddns_record_id: form.ddns_record_id,
+                ddns_record_type: form.ddns_record_type,
+              };
+              saveClientData(item.uuid, payload, setLoading, () => setOpen(false));
+            }}
+            disabled={loading}
+          >
+            {loading ? t("admin.nodeEdit.waiting", "等待...") : t("admin.nodeEdit.save", "保存")}
+          </Button>
+        </Flex>
+      </Dialog.Content>
+    </Dialog.Root>
+  );
+}
