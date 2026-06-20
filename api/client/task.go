@@ -7,6 +7,7 @@ import (
 	"github.com/Fearless743/komari/database/clients"
 	"github.com/Fearless743/komari/database/models"
 	"github.com/Fearless743/komari/database/tasks"
+	"github.com/Fearless743/komari/database/taskexeclogs"
 )
 
 func TaskResult(c *gin.Context) {
@@ -26,6 +27,13 @@ func TaskResult(c *gin.Context) {
 		c.JSON(400, gin.H{"status": "error", "message": "Invalid request"})
 		return
 	}
+
+	_, _ = clients.GetClientByUUID(clientId)
+	status := "success"
+	if req.ExitCode != 0 {
+		status = "failed"
+	}
+	taskexeclogs.UpdateDetailLogByTaskAndClient(req.TaskId, clientId, req.Result, req.ExitCode, status, req.FinishedAt)
 
 	if err := tasks.SaveTaskResult(req.TaskId, clientId, req.Result, req.ExitCode, models.FromTime(req.FinishedAt)); err != nil {
 		c.JSON(500, gin.H{"status": "error", "message": "Failed to update task result: " + err.Error()})

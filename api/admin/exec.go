@@ -2,14 +2,17 @@ package admin
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/Fearless743/komari/api"
+	"github.com/Fearless743/komari/database/clients"
 	"github.com/Fearless743/komari/database/auditlog"
 	"github.com/Fearless743/komari/database/models"
 	"github.com/Fearless743/komari/database/tasks"
+	"github.com/Fearless743/komari/database/taskexeclogs"
 	"github.com/Fearless743/komari/utils"
 	"github.com/Fearless743/komari/ws"
 )
@@ -28,20 +31,12 @@ func Exec(c *gin.Context) {
 		api.RespondError(c, 400, "Invalid or missing request body: "+err.Error())
 		return
 	}
-	// for uuid := range ws.GetConnectedClients() {
-	// 	if contain(req.Clients, uuid) {
-	// 		onlineClients = append(onlineClients, uuid)
-	// 	}
-	// 	// else {
-	// 	// 	api.RespondError(c, 400, "Client not connected: "+uuid)
-	// 	// 	return
-	// 	// }
-	// }
-	for _, uuid := range req.Clients {
-		if client := ws.GetConnectedClients()[uuid]; client != nil {
-			onlineClients = append(onlineClients, uuid)
+	adminUUID, _ := c.Get("uuid")
+	for _, clientUuid := range req.Clients {
+		if client := ws.GetConnectedClients()[clientUuid]; client != nil {
+			onlineClients = append(onlineClients, clientUuid)
 		} else {
-			offlineClients = append(offlineClients, uuid)
+			offlineClients = append(offlineClients, clientUuid)
 		}
 	}
 	if len(onlineClients) == 0 {
@@ -49,11 +44,35 @@ func Exec(c *gin.Context) {
 		return
 	}
 	taskId := utils.GenerateRandomString(16)
+	totalClients := len(append(onlineClients, offlineClients...))
+	
+	// Create task execution log
+	execLog, logErr := taskexeclogs.CreateTaskExecLog(taskId, req.Command, adminUUID.(string), c.ClientIP(), totalClients)
+	if logErr != nil {
+		fmt.Printf("Failed to create task exec log: %v", logErr)
+	}
+
+	// Create detail logs for each client
+	for _, clientUUID := range append(onlineClients, offlineClients...) {
+		clientName := clientUUID
+		if client, err := clients.GetClientByUUID(clientUUID); err == nil {
+			clientName = client.Name
+		}
+		status := "running"
+		if !contain(onlineClients, clientUUID) {
+			status = "offline"
+		}
+		_, detailErr := taskexeclogs.CreateDetailLog(execLog.ID, taskId, clientUUID, clientName, status)
+		if detailErr != nil {
+			fmt.Printf("Failed to create task exec detail log: %v", detailErr)
+		}
+	}
+
 	if err := tasks.CreateTask(taskId, append(onlineClients, offlineClients...), req.Command); err != nil {
 		api.RespondError(c, 500, "Failed to create task: "+err.Error())
 		return
 	}
-	for _, uuid := range onlineClients {
+	for _, clientUuid := range onlineClients {
 		var send struct {
 			Message string `json:"message"`
 			Command string `json:"command"`
@@ -64,28 +83,37 @@ func Exec(c *gin.Context) {
 		send.TaskId = taskId
 
 		payload, _ := json.Marshal(send)
-		client := ws.GetConnectedClients()[uuid]
+		client := ws.GetConnectedClients()[clientUuid]
 		if client != nil {
 			if err := client.WriteMessage(websocket.TextMessage, payload); err != nil {
-				api.RespondError(c, 400, "Client connection is broke: "+uuid)
+				api.RespondError(c, 400, "Client connection is broke: "+clientUuid)
 				return
 			}
 		} else {
-			api.RespondError(c, 400, "Client connection is null: "+uuid)
+			api.RespondError(c, 400, "Client connection is null: "+clientUuid)
 			return
 		}
 	}
-	uuid, _ := c.Get("uuid")
-	auditlog.Log(c.ClientIP(), uuid.(string), "REC, task id: "+taskId, "warn")
+	auditlog.Log(c.ClientIP(), adminUUID.(string), "REC, task id: "+taskId, "warn")
 	api.RespondSuccess(c, gin.H{
 		"task_id": taskId,
 		"clients": onlineClients,
 	})
 	if len(offlineClients) > 0 {
-		for _, uuid := range offlineClients {
-			tasks.SaveTaskResult(taskId, uuid, "Client offline!", -1, models.FromTime(time.Now()))
+		for _, clientUUID := range offlineClients {
+			tasks.SaveTaskResult(taskId, clientUUID, "Client offline!", -1, models.FromTime(time.Now()))
+			taskexeclogs.UpdateDetailLogByTaskAndClient(taskId, clientUUID, "Client offline!", -1, "offline", time.Now())
 		}
 	}
+}
+
+func contain(slice []string, item string) bool {
+	for _, s := range slice {
+		if s == item {
+			return true
+		}
+	}
+	return false
 }
 
 // func contain(clients []string, uuid string) bool {

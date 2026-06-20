@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/websocket"
 	"github.com/Fearless743/komari/database/clients"
+	"github.com/Fearless743/komari/database/terminallogs"
 	"github.com/Fearless743/komari/utils"
 	"github.com/Fearless743/komari/ws"
 )
@@ -15,7 +16,7 @@ import (
 func RequestTerminal(c *gin.Context) {
 	uuid := c.Param("uuid")
 	user_uuid, _ := c.Get("uuid")
-	_, err := clients.GetClientByUUID(uuid)
+	client, err := clients.GetClientByUUID(uuid)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"status":  "error",
@@ -38,11 +39,18 @@ func RequestTerminal(c *gin.Context) {
 	// 新建一个终端连接
 	id := utils.GenerateRandomString(32)
 	session := &TerminalSession{
-		UserUUID:    user_uuid.(string),
-		UUID:        uuid,
-		Browser:     conn,
-		Agent:       nil,
+		UserUUID:   user_uuid.(string),
+		UUID:       uuid,
+		ClientName: client.Name,
+		Browser:    conn,
+		Agent:      nil,
 		RequesterIp: c.ClientIP(),
+	}
+
+	// Create terminal session log
+	_, logErr := terminallogs.CreateSessionLog(id, uuid, client.Name, user_uuid.(string), c.ClientIP())
+	if logErr != nil {
+		log.Printf("Failed to create terminal session log: %v", logErr)
 	}
 
 	TerminalSessionsMutex.Lock()
@@ -66,6 +74,8 @@ func RequestTerminal(c *gin.Context) {
 		TerminalSessionsMutex.Lock()
 		delete(TerminalSessions, id)
 		TerminalSessionsMutex.Unlock()
+		// Log terminal session end due to offline client
+		terminallogs.UpdateSessionEnd(id, time.Now(), "disconnected", "", 0, 0)
 		return
 	}
 	err = ws.GetConnectedClients()[uuid].WriteJSON(gin.H{
@@ -90,6 +100,8 @@ func RequestTerminal(c *gin.Context) {
 			}
 			conn.Close()
 			delete(TerminalSessions, id)
+			// Log terminal session end due to timeout
+			terminallogs.UpdateSessionEnd(id, time.Now(), "timeout", "", 0, 0)
 		}
 		TerminalSessionsMutex.Unlock()
 	})

@@ -5,6 +5,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/Fearless743/komari/database/auditlog"
+	"github.com/Fearless743/komari/database/terminallogs"
 )
 
 func ForwardTerminal(id string) {
@@ -16,6 +17,8 @@ func ForwardTerminal(id string) {
 	auditlog.Log(session.RequesterIp, session.UserUUID, "established, terminal id:"+id, "terminal")
 	established_time := time.Now()
 	errChan := make(chan error, 1)
+	var browserToAgentCount int
+	var agentToBrowserCount int
 
 	go func() {
 		for {
@@ -23,6 +26,19 @@ func ForwardTerminal(id string) {
 			if err != nil {
 				errChan <- err
 				return
+			}
+
+			// Track bytes and log data samples
+			isBinary := messageType == websocket.BinaryMessage
+			session.BytesSent += int64(len(data))
+			browserToAgentCount++
+			if browserToAgentCount%100 == 0 {
+				sample := string(data)
+				if len(sample) > 200 {
+					sample = sample[:200]
+				}
+				direction := "browser_to_agent"
+				terminallogs.CreateDataLog(id, direction, sample, len(data), isBinary)
 			}
 
 			if messageType == websocket.TextMessage {
@@ -50,6 +66,16 @@ func ForwardTerminal(id string) {
 				errChan <- err
 				return
 			}
+			session.BytesRecv += int64(len(data))
+			agentToBrowserCount++
+			if agentToBrowserCount%100 == 0 {
+				sample := string(data)
+				if len(sample) > 200 {
+					sample = sample[:200]
+				}
+				direction := "agent_to_browser"
+				terminallogs.CreateDataLog(id, direction, sample, len(data), true)
+			}
 			if session.Browser != nil {
 				err = session.Browser.WriteMessage(websocket.BinaryMessage, data)
 				if err != nil {
@@ -70,7 +96,9 @@ func ForwardTerminal(id string) {
 		session.Browser.Close()
 	}
 	disconnect_time := time.Now()
-	auditlog.Log(session.RequesterIp, session.UserUUID, "disconnected, terminal id:"+id+", duration:"+disconnect_time.Sub(established_time).String(), "terminal")
+	duration := disconnect_time.Sub(established_time).String()
+	terminallogs.UpdateSessionEnd(id, disconnect_time, "disconnected", duration, session.BytesSent, session.BytesRecv)
+	auditlog.Log(session.RequesterIp, session.UserUUID, "disconnected, terminal id:"+id+", duration:"+duration, "terminal")
 	TerminalSessionsMutex.Lock()
 	delete(TerminalSessions, id)
 	TerminalSessionsMutex.Unlock()

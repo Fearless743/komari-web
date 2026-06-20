@@ -17,6 +17,8 @@ import (
 	"github.com/Fearless743/komari/api/admin/clipboard"
 	log_api "github.com/Fearless743/komari/api/admin/log"
 	"github.com/Fearless743/komari/api/admin/notification"
+	"github.com/Fearless743/komari/api/admin/taskexeclogs"
+	"github.com/Fearless743/komari/api/admin/terminallogs"
 	"github.com/Fearless743/komari/api/admin/test"
 	"github.com/Fearless743/komari/api/admin/update"
 	"github.com/Fearless743/komari/api/client"
@@ -35,6 +37,8 @@ import (
 	d_notification "github.com/Fearless743/komari/database/notification"
 	"github.com/Fearless743/komari/database/records"
 	"github.com/Fearless743/komari/database/tasks"
+	db_terminallogs "github.com/Fearless743/komari/database/terminallogs"
+	db_taskexeclogs "github.com/Fearless743/komari/database/taskexeclogs"
 	"github.com/Fearless743/komari/public"
 	"github.com/Fearless743/komari/utils"
 	"github.com/Fearless743/komari/utils/cloudflared"
@@ -315,6 +319,23 @@ func RunServer() {
 		}
 		adminAuthrized.GET("/logs", log_api.GetLogs)
 
+		// terminal logs
+		terminalLogsGroup := adminAuthrized.Group("/terminal-logs")
+		{
+			terminalLogsGroup.GET("", terminallogs.GetTerminalLogs)
+			terminalLogsGroup.GET("/:session_id", terminallogs.GetTerminalLogDetails)
+			terminalLogsGroup.GET("/export", terminallogs.ExportTerminalLogsCSV)
+		}
+
+		// task execution logs
+		taskExecLogsGroup := adminAuthrized.Group("/task-exec-logs")
+		{
+			taskExecLogsGroup.GET("", taskexeclogs.GetTaskExecLogs)
+			taskExecLogsGroup.GET("/:task_id", taskexeclogs.GetTaskExecLogDetails)
+			taskExecLogsGroup.GET("/export", taskexeclogs.ExportTaskExecLogsCSV)
+			taskExecLogsGroup.GET("/:task_id/details/export", taskexeclogs.ExportTaskExecDetailsCSV)
+		}
+
 		// clipboard
 		clipboardGroup := adminAuthrized.Group("/clipboard")
 		{
@@ -418,6 +439,12 @@ func DoScheduledWork() {
 	lastDdnsInterval := 10
 	for {
 		cfg, _ := config.GetManyAs[config.Legacy]()
+		preserveTime := cfg.RecordPreserveTime
+		if preserveTime <= 0 {
+			preserveTime = 30
+		}
+		go db_terminallogs.ClearOldTerminalLogs(time.Now().AddDate(0, 0, -preserveTime))
+		go db_taskexeclogs.ClearOldTaskExecLogs(time.Now().AddDate(0, 0, -preserveTime))
 		interval := cfg.DdnsSyncInterval
 		if interval <= 0 {
 			interval = 10
