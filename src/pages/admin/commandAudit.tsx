@@ -21,8 +21,14 @@ interface CommandAuditLog {
   client_uuid: string;
   session_id: string;
   command: string;
+  output: string;
   exit_code: number | null;
 }
+
+// 去除 ANSI 转义序列，便于以纯文本展示终端输出
+const stripAnsi = (s: string): string =>
+  // eslint-disable-next-line no-control-regex
+  s.replace(/\x1b\[[0-9;?]*[A-Za-z]/g, "").replace(/\x1b[()][AB012]/g, "").replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g, "");
 
 interface Filters {
   source: string;
@@ -271,6 +277,16 @@ const CommandAuditPage = () => {
                             <span className="text-sm">
                               {new Date(log.time).toLocaleString()}
                             </span>
+                            <label className="font-bold">{t("command_audit.output")}</label>
+                            {log.output ? (
+                              <pre className="text-xs font-mono whitespace-pre-wrap break-all p-2 rounded max-h-80 overflow-auto bg-black text-green-400">
+                                {stripAnsi(log.output)}
+                              </pre>
+                            ) : (
+                              <span className="text-sm text-gray-500">
+                                {t("command_audit.no_output")}
+                              </span>
+                            )}
                           </Flex>
                           <Flex justify="end" mt="3">
                             <Dialog.Close>
