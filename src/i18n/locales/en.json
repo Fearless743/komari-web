@@ -352,6 +352,8 @@
     "user_uuid": "Operator UUID",
     "keyword": "Command keyword",
     "command": "Command",
+    "output": "Result / Output",
+    "no_output": "No output",
     "exit_code": "Exit code",
     "session_id": "Session/Task ID",
     "time": "Time",

@@ -244,6 +244,8 @@
     "export_json": "导出 JSON",
     "keyword": "命令关键词",
     "no_data": "暂无命令记录",
+    "no_output": "无输出",
+    "output": "运行结果 / 输出",
     "reset": "重置",
     "running": "执行中",
     "search": "查询",
