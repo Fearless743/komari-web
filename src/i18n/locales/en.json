@@ -341,6 +341,28 @@
     "title": "Load Alert"
   },
   "loading": "Loading",
+  "command_audit": {
+    "title": "Command Audit",
+    "description": "Records every command run in terminal sessions and remote execution. Filter and export them.",
+    "source": "Source",
+    "source_all": "All sources",
+    "source_terminal": "Terminal",
+    "source_exec": "Remote exec",
+    "client_uuid": "Client UUID",
+    "user_uuid": "Operator UUID",
+    "keyword": "Command keyword",
+    "command": "Command",
+    "exit_code": "Exit code",
+    "session_id": "Session/Task ID",
+    "time": "Time",
+    "user_ip": "Operator IP",
+    "search": "Search",
+    "reset": "Reset",
+    "export_csv": "Export CSV",
+    "export_json": "Export JSON",
+    "no_data": "No command records",
+    "running": "Running"
+  },
   "log": {
     "title": "Log"
   },

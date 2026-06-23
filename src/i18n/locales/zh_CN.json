@@ -235,6 +235,28 @@
     "violet": "紫罗兰",
     "yellow": "黄色"
   },
+  "command_audit": {
+    "client_uuid": "被控端 UUID",
+    "command": "命令",
+    "description": "记录终端会话与远程执行中运行过的每一条命令，可按条件筛选并导出。",
+    "exit_code": "退出码",
+    "export_csv": "导出 CSV",
+    "export_json": "导出 JSON",
+    "keyword": "命令关键词",
+    "no_data": "暂无命令记录",
+    "reset": "重置",
+    "running": "执行中",
+    "search": "查询",
+    "session_id": "会话/任务 ID",
+    "source": "来源",
+    "source_all": "全部来源",
+    "source_exec": "远程执行",
+    "source_terminal": "终端",
+    "time": "时间",
+    "title": "命令溯源",
+    "user_ip": "操作者 IP",
+    "user_uuid": "操作者 UUID"
+  },
   "command_clipboard": {
     "title": "命令剪贴板"
   },
