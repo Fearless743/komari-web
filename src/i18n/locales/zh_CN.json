@@ -341,6 +341,28 @@
     "title": "负载警报"
   },
   "loading": "加载中...",
+  "command_audit": {
+    "title": "命令溯源",
+    "description": "记录终端会话与远程执行中运行过的每一条命令，可按条件筛选并导出。",
+    "source": "来源",
+    "source_all": "全部来源",
+    "source_terminal": "终端",
+    "source_exec": "远程执行",
+    "client_uuid": "被控端 UUID",
+    "user_uuid": "操作者 UUID",
+    "keyword": "命令关键词",
+    "command": "命令",
+    "exit_code": "退出码",
+    "session_id": "会话/任务 ID",
+    "time": "时间",
+    "user_ip": "操作者 IP",
+    "search": "查询",
+    "reset": "重置",
+    "export_csv": "导出 CSV",
+    "export_json": "导出 JSON",
+    "no_data": "暂无命令记录",
+    "running": "执行中"
+  },
   "log": {
     "title": "日志"
   },

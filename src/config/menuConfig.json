@@ -90,6 +90,11 @@
       "icon": "FileText"
     },
     {
+      "labelKey": "command_audit.title",
+      "path": "/admin/command-audit",
+      "icon": "ScrollText"
+    },
+    {
       "labelKey": "common.about",
       "path": "/admin/about",
       "icon": "AtSign"
