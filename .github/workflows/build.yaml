@@ -27,10 +27,10 @@ jobs:
         
       - name: Archive build artifacts
         run: |
-          cd dist
-          zip -r ../dist-release.zip .
-          cd ..
-        # 将 dist 文件夹压缩为 dist-release.zip
+          # vite 的 outDir 为 ../public/defaultTheme/dist（位于仓库根目录之上）
+          cd ../public/defaultTheme/dist
+          zip -r "$GITHUB_WORKSPACE/dist-release.zip" .
+        # 将构建产物压缩为 dist-release.zip
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
