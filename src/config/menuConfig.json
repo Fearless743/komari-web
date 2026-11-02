@@ -65,11 +65,6 @@
       ]
     },
     {
-      "labelKey": "ping.title",
-      "path": "/admin/ping",
-      "icon": "Activity"
-    },
-    {
       "labelKey": "sessions.title",
       "path": "/admin/sessions",
       "icon": "Users"
@@ -83,11 +78,6 @@
       "labelKey": "logs.title",
       "path": "/admin/logs",
       "icon": "FileText"
-    },
-    {
-      "labelKey": "command_audit.title",
-      "path": "/admin/command-audit",
-      "icon": "ScrollText"
     },
     {
       "labelKey": "common.about",

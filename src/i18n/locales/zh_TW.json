@@ -290,39 +290,14 @@
     "update": "更新",
     "update_available": "有新版本",
     "updated_successfully": "成功更新",
-    "weight": "權重"
+    "weight": "權重",
+    "interval": "間隔"
   },
   "copy": "複製",
   "copy_success": "已複製到剪貼板",
   "current_online": "當前在線",
   "current_time": "當前時間",
   "delete": "刪除",
-  "exec": {
-    "allCompleted": "所有任務執行完成",
-    "command": "執行命令",
-    "commandPlaceholder": "whoami",
-    "description": "在選定的節點上遠程執行命令",
-    "errors": {
-      "emptyCommand": "命令不能為空",
-      "executionFailed": "執行失敗",
-      "noNodes": "請至少選擇一個節點"
-    },
-    "execute": "執行命令",
-    "executing": "執行中...",
-    "pollingTimeout": "任務執行超時",
-    "results": "執行結果",
-    "selectedNodes": "已選擇節點",
-    "selectNodes": "選擇目標節點",
-    "status": {
-      "failed": "失敗",
-      "running": "正在運行",
-      "success": "成功",
-      "timeout": "超時"
-    },
-    "success": "命令執行完成",
-    "taskStarted": "任務已啟動",
-    "title": "遠程執行"
-  },
   "go_to_home": "回到首頁",
   "home_title": "Komari Monitor",
   "just_now": "剛剛",
@@ -355,7 +330,6 @@
     "arch": "架構",
     "basicInfo": "基本資訊",
     "chart": "圖表",
-    "clickToViewPing": "點擊查看延遲圖表",
     "cpu": "CPU",
     "disk": "磁碟",
     "groupNodes": "{{group}} 分組: 共 {{total}} 個伺服器，{{online}} 個伺服器在線",
@@ -371,7 +345,6 @@
     "offline": "離線",
     "online": "在線",
     "os": "作業系統",
-    "ping": "延遲",
     "price": "價格",
     "ram": "記憶體",
     "resourceUsage": "資源使用",
@@ -411,17 +384,6 @@
     "title": "通知"
   },
   "page_not_found": "真不巧，網頁被小鞠吃掉了。",
-  "ping": {
-    "disk_usage_estimate": "預計需要磁碟空間",
-    "disk_usage_with_settings": "根據設定的 {{hour}} 小時保存時間，需要使用 {{space}} 磁碟空間。",
-    "interval": "間隔",
-    "server_view": "伺服器視圖",
-    "target": "目標",
-    "task": "任務",
-    "task_view": "任務視圖",
-    "title": "延遲監測",
-    "type": "類型"
-  },
   "pwa": {
     "browser": "瀏覽器模式",
     "can_install": "可以安裝",
@@ -518,14 +480,6 @@
     "invalid_integer": "無效的整數",
     "invalid_number": "無效的數字",
     "missing_required_fields": "請填寫必填字段: {{fieldNames}}",
-    "nezha": {
-      "description": "哪吒的相容選項，Komari 只能處理基礎的監控，無法使用延遲檢測、遠端控制、NAT和內網穿透等功能。娛樂功能，後續無維護打算。（NTR愛好者）",
-      "enabled": "開啟gRpc端口",
-      "enabled_description": "開啟gRpc端口，隨後哪吒 Agent 可以連接到 Komari, Nezha Agent將會自動註冊。啟動詳情請查看日誌。",
-      "listen": "gRpc監聽地址",
-      "listen_description": "監聽的gRpc地址",
-      "title": "哪吒"
-    },
     "notification": {
       "email": {
         "host": "SMTP 伺服器",
@@ -579,7 +533,6 @@
       "enabled_description": "記錄伺服器歷史負載詳情和Ping記錄等",
       "expected_usage": "保存一台伺服器的數據預計需要{{space}}磁碟空間（Ping數據取決於設定的時間間隔）",
       "invalid_preserve_time": "無效的時間",
-      "ping_record_preserve_time": "Ping數據保存時間",
       "record_preserve_time": "保存時間",
       "record_preserve_time_description": "Komari將會按照設定的小時數保存記錄，過期清理",
       "record_preserve_time_label": "負載數據保存時間",
@@ -648,11 +601,6 @@
     "title": "設置"
   },
   "status_settings": "狀態顯示設置",
-  "terminal": {
-    "disconnect": "連接已斷開",
-    "no_active_connection": "沒有活動連接",
-    "title": "終端"
-  },
   "theme": {
     "active": "當前使用",
     "author": "作者",

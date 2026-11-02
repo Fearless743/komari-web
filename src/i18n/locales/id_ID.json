@@ -290,39 +290,14 @@
     "update": "Perbarui",
     "update_available": "Versi baru tersedia",
     "updated_successfully": "Berhasil diperbarui",
-    "weight": "Bobot"
+    "weight": "Bobot",
+    "interval": "Interval"
   },
   "copy": "Salin",
   "copy_success": "Berhasil disalin!",
   "current_online": "Sedang online",
   "current_time": "Waktu saat ini",
   "delete": "Hapus",
-  "exec": {
-    "allCompleted": "Semua tugas telah selesai dieksekusi",
-    "command": "Perintah",
-    "commandPlaceholder": "whoami",
-    "description": "Eksekusi perintah jarak jauh pada node yang dipilih",
-    "errors": {
-      "emptyCommand": "Perintah tidak boleh kosong.",
-      "executionFailed": "Eksekusi gagal",
-      "noNodes": "Silakan pilih minimal satu node."
-    },
-    "execute": "Eksekusi Jarak Jauh",
-    "executing": "Sedang mengeksekusi",
-    "pollingTimeout": "Waktu tunggu eksekusi tugas habis",
-    "results": "Hasil eksekusi",
-    "selectedNodes": "Node terpilih",
-    "selectNodes": "Pilih node tujuan",
-    "status": {
-      "failed": "Gagal",
-      "running": "Sedang berjalan",
-      "success": "Berhasil",
-      "timeout": "Waktu habis"
-    },
-    "success": "Eksekusi perintah selesai",
-    "taskStarted": "Tugas telah dimulai.",
-    "title": "Eksekusi Jarak Jauh"
-  },
   "go_to_home": "Kembali ke Beranda",
   "home_title": "Pemantau Komari",
   "just_now": "Baru saja",
@@ -355,7 +330,6 @@
     "arch": "Arsitektur",
     "basicInfo": "Informasi Dasar",
     "chart": "Grafik",
-    "clickToViewPing": "Klik untuk melihat grafik ping",
     "cpu": "CPU",
     "disk": "Disk",
     "groupNodes": "Grup {{group}}: total {{total}} server, {{online}} server online",
@@ -371,7 +345,6 @@
     "offline": "Mati",
     "online": "Hidup",
     "os": "Sistem Operasi",
-    "ping": "Ping",
     "price": "Harga",
     "ram": "RAM",
     "resourceUsage": "Penggunaan Sumber Daya",
@@ -411,17 +384,6 @@
     "title": "Notifikasi"
   },
   "page_not_found": "Server tidak dapat menemukan halaman yang Anda minta.",
-  "ping": {
-    "disk_usage_estimate": "Perkiraan ruang disk yang dibutuhkan",
-    "disk_usage_with_settings": "Berdasarkan periode retensi {{hour}} jam yang Anda atur, Anda memerlukan ruang disk sebesar {{space}}.",
-    "interval": "Interval",
-    "server_view": "Tampilan Server",
-    "target": "Target",
-    "task": "Tugas",
-    "task_view": "Tampilan Tugas",
-    "title": "Latensi",
-    "type": "Tipe"
-  },
   "pwa": {
     "browser": "Mode Peramban",
     "can_install": "Dapat Diinstal",
@@ -518,14 +480,6 @@
     "invalid_integer": "Bilangan bulat tidak valid",
     "invalid_number": "Angka tidak valid",
     "missing_required_fields": "Silakan isi kolom yang wajib: {{fieldNames}}",
-    "nezha": {
-      "description": "Opsi kompatibilitas untuk Nezha, Komari hanya dapat menangani pemantauan dasar dan tidak dapat menggunakan fitur seperti deteksi keterlambatan, kontrol jarak jauh, NAT, dan penetrasi internal. Fitur hiburan, tidak ada rencana pemeliharaan di masa depan. (Penggemar NTR)",
-      "enabled": "Aktifkan Port gRpc",
-      "enabled_description": "Aktifkan port gRpc, lalu Nezha Agent dapat terhubung ke Komari, dan Nezha Agent akan terdaftar secara otomatis. Untuk detail startup, silakan cek log.",
-      "listen": "Alamat Listening gRpc",
-      "listen_description": "Alamat listening gRpc",
-      "title": "Nezha"
-    },
     "notification": {
       "email": {
         "host": "Server SMTP",
@@ -579,7 +533,6 @@
       "enabled_description": "Catat riwayat beban server dan detail Ping, serta data lainnya.",
       "expected_usage": "Penyimpanan data untuk satu server diperkirakan membutuhkan ruang disk sebesar {{space}} (data Ping tergantung pada interval waktu yang ditetapkan)",
       "invalid_preserve_time": "Waktu tidak valid",
-      "ping_record_preserve_time": "Periode penyimpanan data Ping",
       "record_preserve_time": "Periode penyimpanan",
       "record_preserve_time_description": "Komari akan menyimpan catatan selama jumlah jam yang ditentukan dan membersihkannya setelah kadaluarsa.",
       "record_preserve_time_label": "Periode penyimpanan data beban",
@@ -648,11 +601,6 @@
     "title": "Pengaturan"
   },
   "status_settings": "Pengaturan Status",
-  "terminal": {
-    "disconnect": "Terputus",
-    "no_active_connection": "Tidak ada koneksi aktif",
-    "title": "Terminal"
-  },
   "theme": {
     "active": "Aktif",
     "author": "Penulis",

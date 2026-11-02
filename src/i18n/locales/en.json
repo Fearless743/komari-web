@@ -298,39 +298,14 @@
     "update": "Update",
     "update_available": "New version available",
     "updated_successfully": "Updated successfully",
-    "weight": "Weight"
+    "weight": "Weight",
+    "interval": "Interval"
   },
   "copy": "Copy",
   "copy_success": "Copied!",
   "current_online": "Current Online",
   "current_time": "Current Time",
   "delete": "Delete",
-  "exec": {
-    "allCompleted": "All tasks executed successfully",
-    "command": "Execute command",
-    "commandPlaceholder": "whoami",
-    "description": "Remotely execute commands on selected nodes",
-    "errors": {
-      "emptyCommand": "The command cannot be empty.",
-      "executionFailed": "Execution failed",
-      "noNodes": "Please select at least one node."
-    },
-    "execute": "Remote Exec",
-    "executing": "Executing",
-    "pollingTimeout": "Task execution timed out",
-    "results": "Execute result",
-    "selectedNodes": "Selected node",
-    "selectNodes": "Select target node",
-    "status": {
-      "failed": "Failed",
-      "running": "Running",
-      "success": "Success",
-      "timeout": "Timeout"
-    },
-    "success": "Command execution completed",
-    "taskStarted": "The task has been initiated.",
-    "title": "Remote Exec"
-  },
   "go_to_home": "Go to home",
   "home_title": "Komari Monitor",
   "just_now": "Just now",
@@ -341,30 +316,6 @@
     "title": "Load Alert"
   },
   "loading": "Loading",
-  "command_audit": {
-    "title": "Command Audit",
-    "description": "Records every command run in terminal sessions and remote execution. Filter and export them.",
-    "source": "Source",
-    "source_all": "All sources",
-    "source_terminal": "Terminal",
-    "source_exec": "Remote exec",
-    "client_uuid": "Client UUID",
-    "user_uuid": "Operator UUID",
-    "keyword": "Command keyword",
-    "command": "Command",
-    "output": "Result / Output",
-    "no_output": "No output",
-    "exit_code": "Exit code",
-    "session_id": "Session/Task ID",
-    "time": "Time",
-    "user_ip": "Operator IP",
-    "search": "Search",
-    "reset": "Reset",
-    "export_csv": "Export CSV",
-    "export_json": "Export JSON",
-    "no_data": "No command records",
-    "running": "Running"
-  },
   "log": {
     "title": "Log"
   },
@@ -387,7 +338,6 @@
     "arch": "Architecture",
     "basicInfo": "Basic Info",
     "chart": "Chart",
-    "clickToViewPing": "Click to view ping chart",
     "cpu": "CPU",
     "disk": "Disk",
     "groupNodes": "{{group}} group: total {{total}} servers, {{online}} servers online",
@@ -403,7 +353,6 @@
     "offline": "Offline",
     "online": "Online",
     "os": "OS",
-    "ping": "Ping",
     "price": "Price",
     "ram": "RAM",
     "resourceUsage": "Resource Usage",
@@ -443,17 +392,6 @@
     "title": "Notification"
   },
   "page_not_found": "The server cannot find the specific page you're trying to access.",
-  "ping": {
-    "disk_usage_estimate": "Estimated disk space required",
-    "disk_usage_with_settings": "Based on the {{hour}} hour retention period you set, you'll need {{space}} disk space.",
-    "interval": "Interval",
-    "server_view": "Server View",
-    "target": "Target",
-    "task": "Task",
-    "task_view": "Task View",
-    "title": "Latency",
-    "type": "Type"
-  },
   "pwa": {
     "browser": "Browser Mode",
     "can_install": "Can Install",
@@ -507,7 +445,7 @@
   },
   "settings": {
     "api": {
-      "description": "API keys can be used to access and operate all resources, including but not limited to remote control, modification of settings, and account passwords. Please keep them safe. Leaving this field blank will disable the API key function.",
+      "description": "API keys can be used to access and operate all resources, including but not limited to changing settings, managing nodes, and account passwords. Please keep them safe. Leaving this field blank will disable the API key function.",
       "key_length_error": "The API key must be at least 12 characters long",
       "title": "API key"
     },
@@ -595,14 +533,6 @@
     "invalid_integer": "Invalid integer",
     "invalid_number": "Invalid number",
     "missing_required_fields": "Please fill in the required fields: {{fieldNames}}",
-    "nezha": {
-      "description": "Compatibility options for Nezha, Komari can only handle basic monitoring and cannot use features like delay detection, remote control, NAT, and internal penetration. Entertainment features, no maintenance plans in the future. (NTR enthusiasts)",
-      "enabled": "Enable gRpc Port",
-      "enabled_description": "Enable gRpc port, then Nezha Agent can connect to Komari, and Nezha Agent will automatically register. For startup details, please check the logs.",
-      "listen": "gRpc Listening Address",
-      "listen_description": "Listening gRpc address",
-      "title": "Nezha"
-    },
     "notification": {
       "email": {
         "host": "SMTP Server",
@@ -653,10 +583,9 @@
     },
     "record": {
       "enabled": "Enable Record",
-      "enabled_description": "Log server historical load details and Ping records,etc.",
-      "expected_usage": "Storing data for one server is estimated to require {{space}} disk space (Ping data depends on the set time interval)",
+      "enabled_description": "Log server historical load details, etc.",
+      "expected_usage": "Storing data for one server is estimated to require {{space}} disk space",
       "invalid_preserve_time": "Invalid time",
-      "ping_record_preserve_time": "Ping data retention period",
       "record_preserve_time": "Preserve time",
       "record_preserve_time_description": "Komari will store records for a set number of hours and clean them up upon expiration.",
       "record_preserve_time_label": "Load data retention period",
@@ -725,11 +654,6 @@
     "title": "Settings"
   },
   "status_settings": "Status Settings",
-  "terminal": {
-    "disconnect": "Disconnected",
-    "no_active_connection": "No active connection",
-    "title": "Terminal"
-  },
   "theme": {
     "active": "Active",
     "author": "Author",

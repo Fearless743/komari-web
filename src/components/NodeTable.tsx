@@ -20,7 +20,6 @@ import Flag from "./Flag";
 import PriceTags from "./PriceTags";
 import Tips from "./ui/tips";
 import { DetailsGrid } from "./DetailsGrid";
-import MiniPingChart from "./MiniPingChart";
 import { getOSImage } from "@/utils";
 import { usePublicInfo } from "@/contexts/PublicInfoContext";
 
@@ -477,9 +476,6 @@ const ExpandedNodeDetails: React.FC<ExpandedNodeDetailsProps> = ({ node }) => {
   return (
     <div className="p-4 space-y-4">
       <DetailsGrid gap="0" uuid={node.uuid} />
-      <div>
-        <MiniPingChart hours={24} uuid={node.uuid} />
-      </div>
     </div>
   );
 };

@@ -28,23 +28,17 @@ export default function GeneralSettings() {
     null
   );
   React.useEffect(() => {
-    const pingPreserveTime = parseInt(
-      settings.ping_record_preserve_time || "30",
-      10
-    );
     const recordPreserveTime = parseInt(
       settings.record_preserve_time || "30",
       10
     );
-    if (isNaN(pingPreserveTime) || isNaN(recordPreserveTime)) {
+    if (isNaN(recordPreserveTime)) {
       setExpectedUsage("0");
       return;
     } else {
-      setExpectedUsage(
-        calculateExpectedUsage(pingPreserveTime, recordPreserveTime)
-      );
+      setExpectedUsage(calculateExpectedUsage(recordPreserveTime));
     }
-  }, [settings.ping_record_preserve_time, settings.record_preserve_time]);
+  }, [settings.record_preserve_time]);
   if (loading) {
     return <Loading text="creeper?" />;
   }
@@ -163,46 +157,27 @@ export default function GeneralSettings() {
             defaultValue: settings.record_preserve_time || "30",
             number: true,
           },
-          {
-            tag: "ping_record_preserve_time",
-            label: t("settings.record.ping_record_preserve_time"),
-            type: "short",
-            placeholder: "30",
-            defaultValue: settings.ping_record_preserve_time || "30",
-            number: true,
-          },
         ]}
         onSave={async (values) => {
           const preserveTime = parseInt(values.record_preserve_time, 10);
-          const pingPreserveTime = parseInt(
-            values.ping_record_preserve_time,
-            10
-          );
-          if (isNaN(preserveTime) || isNaN(pingPreserveTime)) {
+          if (isNaN(preserveTime)) {
             toast.error(t("settings.record.invalid_preserve_time"));
             return;
           }
           await updateSettingsWithToast(
             {
               record_preserve_time: preserveTime,
-              ping_record_preserve_time: pingPreserveTime,
             },
             t
           );
         }}
         onChange={(values) => {
           const preserveTime = parseInt(values.record_preserve_time, 10);
-          const pingPreserveTime = parseInt(
-            values.ping_record_preserve_time,
-            10
-          );
-          if (isNaN(preserveTime) || isNaN(pingPreserveTime)) {
+          if (isNaN(preserveTime)) {
             setExpectedUsage("0");
             return;
           }
-          setExpectedUsage(
-            calculateExpectedUsage(pingPreserveTime, preserveTime)
-          );
+          setExpectedUsage(calculateExpectedUsage(preserveTime));
         }}
       >
         <label className="text-sm text-muted-foreground">
@@ -211,40 +186,12 @@ export default function GeneralSettings() {
           })}
         </label>
       </SettingCardMultiInputCollapse>
-      <SettingCardLabel>{t("settings.nezha.title")}</SettingCardLabel>
-      <label className="text-sm text-muted-foreground -mt-4">
-        {t("settings.nezha.description")}
-      </label>
-      <SettingCardSwitch
-        title={t("settings.nezha.enabled")}
-        description={t("settings.nezha.enabled_description")}
-        defaultChecked={settings.nezha_compat_enabled}
-        onChange={async (checked) => {
-          await updateSettingsWithToast({ nezha_compat_enabled: checked }, t);
-        }}
-      />
-      <SettingCardShortTextInput
-        title={t("settings.nezha.listen")}
-        description={t("settings.nezha.listen_description")}
-        defaultValue={settings.nezha_compat_listen || ""}
-        placeholder="0.0.0.0:5555"
-        OnSave={async (value) => {
-          await updateSettingsWithToast({ nezha_compat_listen: value }, t);
-        }}
-      />
     </>
   );
 }
 
-function calculateExpectedUsage(
-  pingPreserveTime: number,
-  recordPreserveTime: number
-): string {
-  let totalPingBytes = 0;
+function calculateExpectedUsage(recordPreserveTime: number): string {
   let totalRecordBytes = 0;
-
-  // 1 ping/minute * 60 bytes/ping * 60 minutes/hour = 3600 bytes/hour
-  totalPingBytes = pingPreserveTime * 3600;
 
   if (recordPreserveTime <= 4) {
     // First 4 hours: 1 record/minute * 1024 bytes/record * 60 minutes/hour
@@ -257,7 +204,7 @@ function calculateExpectedUsage(
     totalRecordBytes += (recordPreserveTime - 4) * 4 * 1024;
   }
 
-  return formatBytes(totalPingBytes + totalRecordBytes);
+  return formatBytes(totalRecordBytes);
 }
 
 const ApiCard = ({ settings }: { settings: SettingsResponse }) => {

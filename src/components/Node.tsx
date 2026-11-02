@@ -5,7 +5,6 @@ import {
   Text,
   Badge,
   Separator,
-  IconButton,
 } from "@radix-ui/themes";
 import type { LiveData, Record } from "../types/LiveData";
 import UsageBar from "./UsageBar";
@@ -121,15 +120,6 @@ const Node = React.memo(({ basic, live, online }: NodeProps) => {
           </Flex>
           <Flex gap="2" align="center" style={{ flex: "none" }}>
             {live?.message && <Tips color="#CE282E">{live.message}</Tips>}
-            <MiniPingChartFloat
-              uuid={basic.uuid}
-              hours={24}
-              trigger={
-                <IconButton variant="ghost" size="1">
-                  <TrendingUp size="14" />
-                </IconButton>
-              }
-            />
             <Badge color={online ? "green" : "red"} variant="soft">
               {online ? t("nodeCard.online") : t("nodeCard.offline")}
             </Badge>
@@ -291,8 +281,6 @@ import { Link } from "react-router-dom";
 import { useIsMobile } from "@/hooks/use-mobile";
 import type { NodeBasicInfo } from "@/contexts/NodeListContext";
 import PriceTags from "./PriceTags";
-import { TrendingUp } from "lucide-react";
-import MiniPingChartFloat from "./MiniPingChartFloat";
 import { getOSImage, getOSName } from "@/utils";
 import { usePublicInfo } from "@/contexts/PublicInfoContext";
 export const NodeGrid = ({ nodes, liveData }: NodeGridProps) => {

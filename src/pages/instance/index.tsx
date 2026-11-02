@@ -4,11 +4,10 @@ import { useLiveData } from "../../contexts/LiveDataContext";
 import { useTranslation } from "react-i18next";
 import type { Record } from "../../types/LiveData";
 import Flag from "../../components/Flag";
-import { Card, Flex, SegmentedControl, Text } from "@radix-ui/themes";
+import { Card, Flex, Text } from "@radix-ui/themes";
 import { useNodeList } from "@/contexts/NodeListContext";
 import { liveDataToRecords } from "@/utils/RecordHelper";
 import LoadChart from "./LoadChart";
-import PingChart from "./PingChart";
 import { DetailsGrid } from "@/components/DetailsGrid";
 import { usePublicInfo } from "@/contexts/PublicInfoContext";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -21,7 +20,6 @@ export default function InstancePage() {
   const [recent, setRecent] = useState<Record[]>([]);
   const { nodeList } = useNodeList();
   const length = 30 * 5;
-  const [chartView, setChartView] = useState<"load" | "ping">("load");
   // #region 初始数据加载
   const node = nodeList?.find((n) => n.uuid === uuid);
   const { publicInfo } = usePublicInfo();
@@ -225,24 +223,8 @@ export default function InstancePage() {
           </h1>
           <DetailsGrid box align="center" uuid={uuid ?? ""} />
         </div>
-        <SegmentedControl.Root
-          radius="full"
-          value={chartView}
-          onValueChange={(value) => setChartView(value as "load" | "ping")}
-        >
-          <SegmentedControl.Item value="load">
-            {t("nodeCard.load")}
-          </SegmentedControl.Item>
-          <SegmentedControl.Item value="ping">
-            {t("nodeCard.ping")}
-          </SegmentedControl.Item>
-        </SegmentedControl.Root>
         {/* Recharts */}
-        {chartView === "load" ? (
-          <LoadChart data={liveDataToRecords(uuid ?? "", recent)} />
-        ) : (
-          <PingChart uuid={uuid ?? ""} />
-        )}
+        <LoadChart data={liveDataToRecords(uuid ?? "", recent)} />
       </div>
     </div>
   );

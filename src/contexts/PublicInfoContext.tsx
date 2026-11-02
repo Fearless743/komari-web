@@ -9,7 +9,6 @@ export interface PublicInfo {
   disable_password_login: boolean;
   oauth_provider: string;
   oauth_enable: boolean;
-  ping_record_preserve_time: number;
   record_enabled: boolean;
   record_preserve_time: number;
   sitename: string;

@@ -290,39 +290,14 @@
     "update": "更新",
     "update_available": "新しいバージョンがあります",
     "updated_successfully": "更新されました",
-    "weight": "重み"
+    "weight": "重み",
+    "interval": "間隔"
   },
   "copy": "コピー",
   "copy_success": "クリップボードにコピーされました",
   "current_online": "現在オンライン",
   "current_time": "現在の時間",
   "delete": "削除",
-  "exec": {
-    "allCompleted": "すべてのタスクが完了しました",
-    "command": "コマンドを実行",
-    "commandPlaceholder": "whoami",
-    "description": "選択したノードでリモートコマンドを実行",
-    "errors": {
-      "emptyCommand": "コマンドは空にできません",
-      "executionFailed": "実行に失敗しました",
-      "noNodes": "少なくとも1つのノードを選択してください"
-    },
-    "execute": "コマンドを実行",
-    "executing": "実行中...",
-    "pollingTimeout": "タスクの実行がタイムアウトしました",
-    "results": "実行結果",
-    "selectedNodes": "選択されたノード",
-    "selectNodes": "ターゲットノードを選択",
-    "status": {
-      "failed": "失敗",
-      "running": "実行中",
-      "success": "成功",
-      "timeout": "タイムアウト"
-    },
-    "success": "コマンドの実行が完了しました",
-    "taskStarted": "タスクが開始されました",
-    "title": "リモート実行"
-  },
   "go_to_home": "ホームに戻る",
   "home_title": "Komari Monitor",
   "just_now": "たった今",
@@ -355,7 +330,6 @@
     "arch": "アーキテクチャ",
     "basicInfo": "基本情報",
     "chart": "チャート",
-    "clickToViewPing": "クリックして遅延チャートを表示",
     "cpu": "CPU",
     "disk": "ディスク",
     "groupNodes": "{{group}} グループ: 合計 {{total}} 台のサーバー、{{online}} 台がオンライン",
@@ -371,7 +345,6 @@
     "offline": "オフライン",
     "online": "オンライン",
     "os": "オペレーティングシステム",
-    "ping": "遅延",
     "price": "価格",
     "ram": "メモリ",
     "resourceUsage": "リソース使用",
@@ -411,17 +384,6 @@
     "title": "通知"
   },
   "page_not_found": "残念ながら、ページは小鞠に食べられてしまいました。",
-  "ping": {
-    "disk_usage_estimate": "必要なディスクスペースの見積もり",
-    "disk_usage_with_settings": "設定された {{hour}} 時間の保存時間に基づき、{{space}} のディスクスペースが必要です。",
-    "interval": "間隔",
-    "server_view": "サーバービュー",
-    "target": "ターゲット",
-    "task": "タスク",
-    "task_view": "タスクビュー",
-    "title": "遅延監視",
-    "type": "タイプ"
-  },
   "pwa": {
     "browser": "ブラウザモード",
     "can_install": "インストール可能",
@@ -518,14 +480,6 @@
     "invalid_integer": "無効な整数",
     "invalid_number": "無効な数字",
     "missing_required_fields": "必須フィールドを入力してください: {{fieldNames}}",
-    "nezha": {
-      "description": "哪吒の互換オプション、Komari は基本的な監視のみを処理でき、遅延検出、リモートコントロール、NAT および内部ネットワークの貫通などの機能は使用できません。エンターテインメント機能は、今後のメンテナンスの予定はありません。（NTR愛好者）",
-      "enabled": "gRpc ポートを有効にする",
-      "enabled_description": "gRpc ポートを有効にすると、哪吒エージェントが Komari に接続でき、Nezha エージェントが自動的に登録されます。起動の詳細はログを確認してください。",
-      "listen": "gRpc リスニングアドレス",
-      "listen_description": "リスニングする gRpc アドレス",
-      "title": "哪吒"
-    },
     "notification": {
       "email": {
         "host": "SMTP サーバー",
@@ -579,7 +533,6 @@
       "enabled_description": "サーバーの履歴負荷詳細や Ping 記録などを記録します",
       "expected_usage": "サーバーのデータを保存するのに必要なディスクスペースは約 {{space}} です（Ping データは設定した時間間隔に依存します）",
       "invalid_preserve_time": "無効な時間",
-      "ping_record_preserve_time": "Ping データ保存時間",
       "record_preserve_time": "保存時間",
       "record_preserve_time_description": "Komari は設定した時間数に従って記録を保存し、期限切れのものをクリーンアップします",
       "record_preserve_time_label": "負荷データ保存時間",
@@ -648,11 +601,6 @@
     "title": "設定"
   },
   "status_settings": "ステータス表示設定",
-  "terminal": {
-    "disconnect": "接続が切断されました",
-    "no_active_connection": "アクティブな接続はありません",
-    "title": "ターミナル"
-  },
   "theme": {
     "active": "現在使用中",
     "author": "著者",

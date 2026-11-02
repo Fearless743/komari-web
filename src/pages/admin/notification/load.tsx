@@ -69,7 +69,7 @@ const InnerLayout = () => {
             <TableHead>{t("loadAlert.metric")}</TableHead>
             <TableHead>{t("common.threshold")}</TableHead>
             <TableHead>{t("loadAlert.ratio")}</TableHead>
-            <TableHead>{t("ping.interval")}</TableHead>
+            <TableHead>{t("common.interval")}</TableHead>
             <TableHead>{t("common.action")}</TableHead>
           </TableHeader>
           <TableBody>
@@ -277,7 +277,7 @@ const Row = ({ alert }: { alert: LoadAlert }) => {
                 />
               </Flex>
               <label>
-                {t("ping.interval")} ({t("time.minute")})
+                {t("common.interval")} ({t("time.minute")})
               </label>
               <TextField.Root
                 type="number"
@@ -449,7 +449,7 @@ const AddButton: React.FC = () => {
               </label>
             </div>
             <label htmlFor="interval">
-              {t("ping.interval")} ({t("time.minute")})
+              {t("common.interval")} ({t("time.minute")})
             </label>
             <TextField.Root
               id="interval"

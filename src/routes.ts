@@ -117,22 +117,12 @@ export const routes: RouteObject[] = [
         ],
       },
       {
-        path: "ping",
-        element: React.createElement(
-          lazy(() => import("./pages/admin/pingTask"))
-        ),
-      },
-      {
         path: "about",
         element: React.createElement(lazy(() => import("./pages/admin/about"))),
       },
       {
         path: "logs",
         element: React.createElement(lazy(() => import("./pages/admin/log"))),
-      },
-      {
-        path: "command-audit",
-        element: React.createElement(lazy(() => import("./pages/admin/commandAudit"))),
       }
     ],
   },
