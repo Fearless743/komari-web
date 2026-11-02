@@ -270,6 +270,7 @@
     "have_been_omitted": "{{count}}已省略",
     "help": "帮助",
     "home": "主页",
+    "interval": "间隔",
     "long_term": "长期",
     "monthly": "月",
     "name": "名称",
@@ -298,8 +299,7 @@
     "update": "更新",
     "update_available": "有新版本",
     "updated_successfully": "成功更新",
-    "weight": "权重",
-    "interval": "间隔"
+    "weight": "权重"
   },
   "copy": "复制",
   "copy_success": "已复制到剪贴板",
