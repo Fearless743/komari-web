@@ -62,6 +62,12 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 import { formatBytes, stringToBytes } from "@/utils/unitHelper";
+import {
+  copyText,
+  isSafeInstallCommand,
+  isValidIPv4,
+  isValidIPv6,
+} from "@/utils/clipboard";
 import PriceTags from "@/components/PriceTags";
 import Loading from "@/components/loading";
 import Tips from "@/components/ui/tips";
@@ -218,10 +224,9 @@ const SortableRow = ({
     transform: CSS.Transform.toString(transform),
     transition,
   };
-  function copy(text: string) {
-    navigator.clipboard.writeText(text);
-    toast.success(t("copy_success"));
-  }
+  const copy = (text: string, validate: (value: string) => boolean) => {
+    void copyText(text, { validate, showValue: true });
+  };
   return (
     <TableRow ref={setNodeRef} style={style} className="hover:bg-accent-a2">
       <TableCell>
@@ -259,7 +264,10 @@ const SortableRow = ({
           {node.ipv4 && (
             <Text size="2" className="flex items-center gap-1">
               {node.ipv4}
-              <IconButton variant="ghost" onClick={() => copy(node.ipv4)}>
+              <IconButton
+                variant="ghost"
+                onClick={() => copy(node.ipv4, isValidIPv4)}
+              >
                 <Copy size="16" />
               </IconButton>
             </Text>
@@ -280,7 +288,10 @@ const SortableRow = ({
                       : node.ipv6;
                   })()
                 : node.ipv6}
-              <IconButton variant="ghost" onClick={() => copy(node.ipv6)}>
+              <IconButton
+                variant="ghost"
+                onClick={() => copy(node.ipv6, isValidIPv6)}
+              >
                 <Copy size="16" />
               </IconButton>
             </Text>
@@ -657,14 +668,6 @@ function GenerateCommandButton({ node, settings }: { node: NodeDetail, settings:
     return finalCommand;
   };
 
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast.success(t("copy_success", "已复制到剪贴板"));
-    } catch (err) {
-      console.error("Failed to copy text: ", err);
-    }
-  };
   const { t } = useTranslation();
   return (
     <Dialog.Root>
@@ -1102,7 +1105,12 @@ function GenerateCommandButton({ node, settings }: { node: NodeDetail, settings:
           <Flex justify="center">
             <Button
               style={{ width: "100%" }}
-              onClick={() => copyToClipboard(generateCommand())}
+              onClick={() =>
+                void copyText(generateCommand(), {
+                  validate: isSafeInstallCommand,
+                  maxLength: 4096,
+                })
+              }
             >
               <Copy size={16} />
               {t("copy")}
@@ -1408,7 +1416,10 @@ function DetailView({ node }: { node: NodeDetail }) {
                         className="size-5"
                         type="button"
                         onClick={() => {
-                          navigator.clipboard.writeText(node.ipv4!);
+                          void copyText(node.ipv4!, {
+                            validate: isValidIPv4,
+                            showValue: true,
+                          });
                         }}
                       >
                         <Copy size={16} />
@@ -1428,7 +1439,10 @@ function DetailView({ node }: { node: NodeDetail }) {
                         className="size-5"
                         type="button"
                         onClick={() => {
-                          navigator.clipboard.writeText(node.ipv6!);
+                          void copyText(node.ipv6!, {
+                            validate: isValidIPv6,
+                            showValue: true,
+                          });
                         }}
                       >
                         <Copy size={16} />

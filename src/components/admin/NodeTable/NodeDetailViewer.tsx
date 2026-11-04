@@ -15,6 +15,7 @@ import { Label } from "@/components/ui/label";
 import { Copy } from "lucide-react";
 import { t } from "i18next";
 import { Button, IconButton } from "@radix-ui/themes";
+import { copyText, isValidIPv4, isValidIPv6 } from "@/utils/clipboard";
 
 function formatBytes(bytes?: number | string): string {
   if (!bytes || isNaN(Number(bytes))) return "-";
@@ -65,7 +66,10 @@ export function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
                         className="size-5"
                         type="button"
                         onClick={() => {
-                          navigator.clipboard.writeText(item.ipv4!);
+                          void copyText(item.ipv4!, {
+                            validate: isValidIPv4,
+                            showValue: true,
+                          });
                         }}
                       >
                         <Copy size={16} />
@@ -85,7 +89,10 @@ export function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
                         className="size-5"
                         type="button"
                         onClick={() => {
-                          navigator.clipboard.writeText(item.ipv6!);
+                          void copyText(item.ipv6!, {
+                            validate: isValidIPv6,
+                            showValue: true,
+                          });
                         }}
                       >
                         <Copy size={16} />

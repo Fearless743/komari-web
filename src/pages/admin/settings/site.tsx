@@ -11,6 +11,7 @@ import {
   SettingCardSwitch,
 } from "@/components/admin/SettingCard";
 import { toast } from "sonner";
+import { copyText, isSafeHttpUrl } from "@/utils/clipboard";
 import Loading from "@/components/loading";
 import { DownloadIcon } from "lucide-react";
 import { useState } from "react";
@@ -191,10 +192,13 @@ export default function SiteSettings() {
             <Button
               onClick={() => {
                 if (!settings.tempory_share_token) return;
-                navigator.clipboard.writeText(
-                  `${window.location.origin}/?temp_key=${settings.tempory_share_token}`,
-                );
-                toast.success(t("copy"));
+                const shareUrl = `${window.location.origin}/?temp_key=${encodeURIComponent(
+                  settings.tempory_share_token,
+                )}`;
+                void copyText(shareUrl, {
+                  validate: isSafeHttpUrl,
+                  showValue: true,
+                });
               }}
             >
               {t("copy")}
@@ -212,7 +216,7 @@ export default function SiteSettings() {
                 if (!isNaN(val)) {
                   setShareHours(val);
                 }
-              } catch (err) {
+              } catch {
                 // ignore
               }
             }}

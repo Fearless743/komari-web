@@ -31,6 +31,7 @@ import {
 } from "@tanstack/react-table";
 import { z } from "zod";
 
+import { copyText, isValidIPv4, isValidIPv6 } from "@/utils/clipboard";
 import { TableCellViewer } from "./NodeTable/NodeDetailViewer";
 import { DragHandle, DraggableRow } from "./NodeTable/NodeTableDndComponents";
 
@@ -114,8 +115,10 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
               <IconButton
                 variant="ghost"
                 onClick={() => {
-                  navigator.clipboard.writeText(ipv4);
-                  toast.success(t("copy_success"));
+                  void copyText(ipv4, {
+                    validate: isValidIPv4,
+                    showValue: true,
+                  });
                 }}
               >
                 <Copy size={16} />
@@ -129,8 +132,10 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
                 variant="ghost"
                 className="size-5"
                 onClick={() => {
-                  navigator.clipboard.writeText(ipv6);
-                  toast.success(t("copy_success"));
+                  void copyText(ipv6, {
+                    validate: isValidIPv6,
+                    showValue: true,
+                  });
                 }}
               >
                 <Copy size={16} />

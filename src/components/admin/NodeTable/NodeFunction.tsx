@@ -16,7 +16,7 @@ import {
   TextArea,
   TextField,
 } from "@radix-ui/themes";
-import { toast } from "sonner";
+import { copyText, isSafeInstallCommand } from "@/utils/clipboard";
 
 async function removeClient(uuid: string) {
   await fetch(`/api/admin/client/${uuid}/remove`, {
@@ -99,15 +99,6 @@ export function ActionsCell({ row }: { row: Row<z.infer<typeof schema>> }) {
         break;
     }
     return finalCommand;
-  };
-
-  const copyToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast.success(t("copy_success", "已复制到剪贴板"));
-    } catch (err) {
-      console.error("Failed to copy text: ", err);
-    }
   };
 
   return (
@@ -248,7 +239,12 @@ export function ActionsCell({ row }: { row: Row<z.infer<typeof schema>> }) {
             <Flex justify="center">
               <Button
                 style={{ width: "100%" }}
-                onClick={() => copyToClipboard(generateCommand())}
+                onClick={() =>
+                  void copyText(generateCommand(), {
+                    validate: isSafeInstallCommand,
+                    maxLength: 4096,
+                  })
+                }
               >
                 <Copy size={16} />
                 {t("copy")}
