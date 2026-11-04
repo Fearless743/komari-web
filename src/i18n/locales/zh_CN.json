@@ -302,6 +302,8 @@
     "weight": "权重"
   },
   "copy": "复制",
+  "copy_blocked": "复制内容不安全，已阻止",
+  "copy_failed": "复制失败，请检查浏览器权限或使用 HTTPS",
   "copy_success": "已复制到剪贴板",
   "current_online": "当前在线",
   "current_time": "当前时间",
@@ -513,9 +515,6 @@
       }
     },
     "general": {
-      "auto_discovery": "自动发现",
-      "auto_discovery_key": "自动发现密钥",
-      "auto_discovery_key_description": "使用自动发现可以批量注册客户端，留空表示禁用自动发现。",
       "title": "通用"
     },
     "geoip": {

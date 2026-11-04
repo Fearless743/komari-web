@@ -294,6 +294,8 @@
     "interval": "間隔"
   },
   "copy": "複製",
+  "copy_blocked": "複製內容不安全，已阻止",
+  "copy_failed": "複製失敗，請檢查瀏覽器權限或使用 HTTPS",
   "copy_success": "已複製到剪貼板",
   "current_online": "當前在線",
   "current_time": "當前時間",
@@ -459,9 +461,6 @@
       "note": "個性化內容在使用自定義主題時可能會被覆蓋。請確保代碼的安全性，避免使用不受信任的內容。"
     },
     "general": {
-      "auto_discovery": "自動發現",
-      "auto_discovery_key": "自動發現密鑰",
-      "auto_discovery_key_description": "使用自動發現可以批量註冊客戶端，留空表示禁用自動發現。",
       "title": "通用"
     },
     "geoip": {
