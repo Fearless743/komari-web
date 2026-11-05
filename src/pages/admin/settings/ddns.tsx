@@ -221,19 +221,17 @@ const DdnsSettings = () => {
             <Button 
                 size="1" 
                 variant="outline" 
-                disabled={fetchingCf || !providerValues.api_token}
+                disabled={fetchingCf}
                 onClick={async () => {
-                   if (!providerValues.api_token) {
-                     toast.error(t("settings.ddns.missing_token", "请输入并保存 Token 后再获取"));
-                     return;
-                   }
                    setFetchingCf(true);
                    setCfZones([]);
                    try {
+                     // 脱敏后 GET 不会返回 api_token；留空时后端使用已保存的 Token。
+                     const token = typeof providerValues.api_token === "string" ? providerValues.api_token.trim() : "";
                      const res = await fetch("/api/admin/settings/ddns/cloudflare/zones", {
                        method: "POST",
                        headers: { "Content-Type": "application/json" },
-                       body: JSON.stringify({ token: providerValues.api_token }),
+                       body: JSON.stringify({ token }),
                      });
                      const data = await res.json();
                      if (data.status !== "success") throw new Error(data.message || t("common.error"));
